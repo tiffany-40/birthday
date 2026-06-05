@@ -457,7 +457,7 @@
   footer { background: var(--dark); color: white; text-align: center; padding: 4rem 1.5rem; position: relative; overflow: hidden; }
   /* faint caratbong pattern in footer */
   footer::before {
-    content: '';
+    content: '💜💜💜💜💜💜💜💜💜💜💜💜💜💜💜💜💜💜💜💜';
     position: absolute; top: 1rem; left: 50%; transform: translateX(-50%);
     font-size: 0.7rem; letter-spacing: 1.5rem; opacity: 0.04;
     white-space: nowrap; pointer-events: none;
@@ -537,7 +537,7 @@
 
   <div class="confetti-field" id="confetti"></div>
 
-  <span class="hero-eyebrow">🎉 You're Invited · Sunday, June 28th, 2026</span>
+  <span class="hero-eyebrow">🎉 You're Invited · June 28th, 2026</span>
   <h1 class="hero-name">
     Tiffany's
     <span>40th</span>
@@ -547,7 +547,7 @@
   <p class="hero-svt-hint">✦ make your day · feel the energy · be the sun ✦</p>
   <div class="hero-divider"></div>
   <div class="hero-details">
-    <div class="hero-detail-item"><span class="icon">🍖</span> Backyard BBQ Celebration</div>
+    <div class="hero-detail-item"><span class="icon"></span> Backyard BBQ Celebration</div>
     <div class="hero-detail-item"><span class="icon">📅</span> Sunday, June 28th</div>
     <div class="hero-detail-item"><span class="icon">⏰</span> 4:30 – 7:30 PM</div>
     <div class="hero-detail-item"><span class="icon">📍</span> Rockville, MD</div>
@@ -635,7 +635,7 @@
       <div class="gift-card">
         <div class="gift-card-icon">🛋️</div>
         <h3>Patio Furniture Fund</h3>
-        <p>Help Tiffany create her dream outdoor space at her new Virginia Beach home.</p>
+        <p>Help Tiffany decorate her outdoor space at her new Virginia Beach home.</p>
         <a href="https://venmo.com/u/tiffytaylor" target="_blank" class="venmo-btn">
           <div class="venmo-icon">V</div>
           Contribute via Venmo
@@ -644,7 +644,7 @@
       <div class="gift-card">
         <div class="gift-card-icon">🏡</div>
         <h3>Housewarming Essentials</h3>
-        <p>Contribute toward home décor, kitchen items, or whatever she needs for her new beginning.</p>
+        <p>Contribute toward home décor or whatever she needs for her new beginning.</p>
         <a href="https://venmo.com/u/tiffytaylor" target="_blank" class="venmo-btn">
           <div class="venmo-icon">V</div>
           Contribute via Venmo
@@ -825,12 +825,16 @@
       <span class="svt-char-name">Dino</span>
     </div>
   </div>
+  <p class="svt-caption">
+    <span class="cb-icon">💜</span>
+    <span class="cb-icon">💜</span>
+  </p>
 </div>
 
 <!-- RSVP -->
 <section id="rsvp">
   <div class="section-inner">
-    <span class="section-label">Reserve Your Spot</span>
+    <span class="section-label"></span>
     <h2 class="section-title">RSVP by June 21st</h2>
     <div class="section-divider" style="background: linear-gradient(90deg, var(--gold), transparent);"></div>
 
@@ -919,35 +923,14 @@
     </p>
     <div class="gallery-categories">
       <button class="gallery-filter active" onclick="filterGallery('all',this)">All</button>
-      <button class="gallery-filter" onclick="filterGallery('friends',this)">Friends</button>
       <button class="gallery-filter" onclick="filterGallery('moments',this)">Moments</button>
     </div>
-    <div class="gallery-grid" id="galleryGrid">
-      <div class="gallery-item" data-category="friends">
-        <div class="gallery-placeholder-icon">🥂</div>
-        <div class="gallery-placeholder-label">Friends</div>
-        <div class="gallery-placeholder-sub">Add a photo</div>
-      </div>
-      <div class="gallery-item" data-category="moments">
+       <div class="gallery-item" data-category="moments">
         <div class="gallery-placeholder-icon">✨</div>
         <div class="gallery-placeholder-label">Special Moments</div>
         <div class="gallery-placeholder-sub">Add a photo</div>
       </div>
-        <div class="gallery-placeholder-icon">🏠</div>
-        <div class="gallery-placeholder-label">Home</div>
-        <div class="gallery-placeholder-sub">Add a photo</div>
-      </div>
-      <div class="gallery-item" data-category="friends">
-        <div class="gallery-placeholder-icon">🎂</div>
-        <div class="gallery-placeholder-label">Celebrations</div>
-        <div class="gallery-placeholder-sub">Add a photo</div>
-      </div>
       <div class="gallery-item" data-category="moments">
-        <div class="gallery-placeholder-icon">🌊</div>
-        <div class="gallery-placeholder-label">Adventures</div>
-        <div class="gallery-placeholder-sub">Add a photo</div>
-      </div>
-    </div>
     <div class="gallery-upload-note">
       📸 To add real photos, replace the placeholder elements with &lt;img&gt; tags pointing to your images,
       or use a free image host like <strong>Imgur</strong> or <strong>Google Photos</strong> share links.
@@ -958,8 +941,8 @@
 <!-- QR CODE -->
 <section id="qrcode-section">
   <div class="section-inner" style="text-align:center;">
-    <span class="section-label">Scan for Details</span>
-    <h2 class="section-title">Scan</h2>
+    <span class="section-label">Share the Party</span>
+    <h2 class="section-title">Scan &amp; Share</h2>
     <div class="section-divider" style="margin: 0 auto 1rem;"></div>
     <p style="color:var(--text-light); margin-bottom:1.5rem; max-width:500px; margin-left:auto; margin-right:auto;">
       Print or text this QR code so guests can RSVP and see all the details instantly from their phone.
@@ -981,7 +964,7 @@
   <p class="footer-sub">Celebrating Tiffany · June 28, 2026 · Rockville, MD</p>
   <!-- Carat easter egg: a nod only SVT fans would catch -->
   <p class="footer-carat">✦ &nbsp; Going into the next chapter &nbsp; ✦</p>
-  <p style="margin-top:0.75rem; font-size:0.72rem; color:rgba(255,255,255,0.15);">Made with 💜 &amp; for a very special 40th</p>
+  <p style="margin-top:0.75rem; font-size:0.72rem; color:rgba(255,255,255,0.15);">Made with 💜 &amp; 💜 for a very special 40th</p>
 </footer>
 
 <!-- ─────────── SCRIPTS ─────────── -->
@@ -1011,7 +994,7 @@ function closeMenu()  { document.getElementById('navLinks').classList.remove('op
 
 /* ── COUNTDOWN ── */
 (function() {
-  const target = new Date('2025-06-28T16:30:00');
+  const target = new Date('2026-06-28T16:30:00');
   function tick() {
     const diff = target - new Date();
     if (diff <= 0) {

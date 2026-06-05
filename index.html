@@ -457,7 +457,7 @@
   footer { background: var(--dark); color: white; text-align: center; padding: 4rem 1.5rem; position: relative; overflow: hidden; }
   /* faint caratbong pattern in footer */
   footer::before {
-    content: '🔵🔵🔵🔵🔵🔵🔵🔵🔵🔵🔵🔵🔵🔵🔵🔵🔵🔵🔵🔵';
+    content: '';
     position: absolute; top: 1rem; left: 50%; transform: translateX(-50%);
     font-size: 0.7rem; letter-spacing: 1.5rem; opacity: 0.04;
     white-space: nowrap; pointer-events: none;
@@ -515,7 +515,7 @@
 
 <!-- NAV -->
 <nav>
-  <div class="nav-logo"><span class="cb">🔵</span> Tiffany's 40th</div>
+  <div class="nav-logo"><span class="cb">💜</span> Tiffany's 40th</div>
   <ul class="nav-links" id="navLinks">
     <li><a href="#details"   onclick="closeMenu()">Details</a></li>
     <li><a href="#gifts"     onclick="closeMenu()">Gifts</a></li>
@@ -537,7 +537,7 @@
 
   <div class="confetti-field" id="confetti"></div>
 
-  <span class="hero-eyebrow">🎉 You're Invited · June 28th, 2025</span>
+  <span class="hero-eyebrow">🎉 You're Invited · Sunday, June 28th, 2026</span>
   <h1 class="hero-name">
     Tiffany's
     <span>40th</span>
@@ -636,7 +636,7 @@
         <div class="gift-card-icon">🛋️</div>
         <h3>Patio Furniture Fund</h3>
         <p>Help Tiffany create her dream outdoor space at her new Virginia Beach home.</p>
-        <a href="https://venmo.com/u/TiffTaylor" target="_blank" class="venmo-btn">
+        <a href="https://venmo.com/u/tiffytaylor" target="_blank" class="venmo-btn">
           <div class="venmo-icon">V</div>
           Contribute via Venmo
         </a>
@@ -645,7 +645,7 @@
         <div class="gift-card-icon">🏡</div>
         <h3>Housewarming Essentials</h3>
         <p>Contribute toward home décor, kitchen items, or whatever she needs for her new beginning.</p>
-        <a href="https://venmo.com/u/TiffTaylor" target="_blank" class="venmo-btn">
+        <a href="https://venmo.com/u/tiffytaylor" target="_blank" class="venmo-btn">
           <div class="venmo-icon">V</div>
           Contribute via Venmo
         </a>
@@ -653,7 +653,7 @@
     </div>
     <div class="gift-qr-section fade-in-on-scroll">
       <h3>Scan to Contribute on Venmo</h3>
-      <p>Point your camera at this QR code to open Venmo for @TiffTaylor</p>
+      <p>Point your camera at this QR code to open Venmo for @tiffytaylor</p>
       <canvas id="venmo-qr"></canvas>
     </div>
   </div>
@@ -825,11 +825,6 @@
       <span class="svt-char-name">Dino</span>
     </div>
   </div>
-  <p class="svt-caption">
-    <span class="cb-icon">🔵</span>
-    Sending all the light and energy your way — Happy 40th, Carat!
-    <span class="cb-icon">🔵</span>
-  </p>
 </div>
 
 <!-- RSVP -->
@@ -924,22 +919,10 @@
     </p>
     <div class="gallery-categories">
       <button class="gallery-filter active" onclick="filterGallery('all',this)">All</button>
-      <button class="gallery-filter" onclick="filterGallery('childhood',this)">Childhood</button>
-      <button class="gallery-filter" onclick="filterGallery('family',this)">Family</button>
       <button class="gallery-filter" onclick="filterGallery('friends',this)">Friends</button>
       <button class="gallery-filter" onclick="filterGallery('moments',this)">Moments</button>
     </div>
     <div class="gallery-grid" id="galleryGrid">
-      <div class="gallery-item" data-category="childhood">
-        <div class="gallery-placeholder-icon">👶</div>
-        <div class="gallery-placeholder-label">Childhood</div>
-        <div class="gallery-placeholder-sub">Add a photo</div>
-      </div>
-      <div class="gallery-item" data-category="family">
-        <div class="gallery-placeholder-icon">👨‍👩‍👧</div>
-        <div class="gallery-placeholder-label">Family</div>
-        <div class="gallery-placeholder-sub">Add a photo</div>
-      </div>
       <div class="gallery-item" data-category="friends">
         <div class="gallery-placeholder-icon">🥂</div>
         <div class="gallery-placeholder-label">Friends</div>
@@ -950,7 +933,6 @@
         <div class="gallery-placeholder-label">Special Moments</div>
         <div class="gallery-placeholder-sub">Add a photo</div>
       </div>
-      <div class="gallery-item" data-category="family">
         <div class="gallery-placeholder-icon">🏠</div>
         <div class="gallery-placeholder-label">Home</div>
         <div class="gallery-placeholder-sub">Add a photo</div>
@@ -976,8 +958,8 @@
 <!-- QR CODE -->
 <section id="qrcode-section">
   <div class="section-inner" style="text-align:center;">
-    <span class="section-label">Share the Party</span>
-    <h2 class="section-title">Scan &amp; Share</h2>
+    <span class="section-label">Scan for Details</span>
+    <h2 class="section-title">Scan</h2>
     <div class="section-divider" style="margin: 0 auto 1rem;"></div>
     <p style="color:var(--text-light); margin-bottom:1.5rem; max-width:500px; margin-left:auto; margin-right:auto;">
       Print or text this QR code so guests can RSVP and see all the details instantly from their phone.
@@ -996,10 +978,10 @@
     "Forty years of memories.<br>A lifetime of adventures still ahead."
   </div>
   <div class="footer-divider"></div>
-  <p class="footer-sub">Celebrating Tiffany · June 28, 2025 · Rockville, MD</p>
+  <p class="footer-sub">Celebrating Tiffany · June 28, 2026 · Rockville, MD</p>
   <!-- Carat easter egg: a nod only SVT fans would catch -->
-  <p class="footer-carat">✦ &nbsp; Going Seventeen into the next chapter &nbsp; ✦</p>
-  <p style="margin-top:0.75rem; font-size:0.72rem; color:rgba(255,255,255,0.15);">Made with 💜 &amp; 🔵 for a very special 40th</p>
+  <p class="footer-carat">✦ &nbsp; Going into the next chapter &nbsp; ✦</p>
+  <p style="margin-top:0.75rem; font-size:0.72rem; color:rgba(255,255,255,0.15);">Made with 💜 &amp; for a very special 40th</p>
 </footer>
 
 <!-- ─────────── SCRIPTS ─────────── -->
@@ -1141,7 +1123,7 @@ window.addEventListener('load', function() {
     color: { dark: '#2D1845', light: '#FFFFFF' },
     errorCorrectionLevel: 'H'
   });
-  QRCode.toCanvas(document.getElementById('venmo-qr'), 'https://venmo.com/u/TiffTaylor', {
+  QRCode.toCanvas(document.getElementById('venmo-qr'), 'https://venmo.com/u/tiffytaylor', {
     width: 160,
     color: { dark: '#3D95CE', light: '#FFFFFF' },
     errorCorrectionLevel: 'H'

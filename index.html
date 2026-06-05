@@ -457,7 +457,7 @@
   footer { background: var(--dark); color: white; text-align: center; padding: 4rem 1.5rem; position: relative; overflow: hidden; }
   /* faint caratbong pattern in footer */
   footer::before {
-    content: '💜💜💜💜💜💜💜💜💜💜💜💜💜💜💜💜💜💜💜💜';
+    content: '';
     position: absolute; top: 1rem; left: 50%; transform: translateX(-50%);
     font-size: 0.7rem; letter-spacing: 1.5rem; opacity: 0.04;
     white-space: nowrap; pointer-events: none;
@@ -652,9 +652,6 @@
       </div>
     </div>
     <div class="gift-qr-section fade-in-on-scroll">
-      <h3>Scan to Contribute on Venmo</h3>
-      <p>Point your camera at this QR code to open Venmo for @tiffytaylor</p>
-      <canvas id="venmo-qr"></canvas>
     </div>
   </div>
 </section>
@@ -826,8 +823,8 @@
     </div>
   </div>
   <p class="svt-caption">
-    <span class="cb-icon">💜</span>
-    <span class="cb-icon">💜</span>
+    <span class="cb-icon"></span>
+    <span class="cb-icon"></span>
   </p>
 </div>
 
@@ -938,22 +935,7 @@
   </div>
 </section>
 
-<!-- QR CODE -->
-<section id="qrcode-section">
-  <div class="section-inner" style="text-align:center;">
-    <span class="section-label">Share the Party</span>
-    <h2 class="section-title">Scan &amp; Share</h2>
-    <div class="section-divider" style="margin: 0 auto 1rem;"></div>
-    <p style="color:var(--text-light); margin-bottom:1.5rem; max-width:500px; margin-left:auto; margin-right:auto;">
-      Print or text this QR code so guests can RSVP and see all the details instantly from their phone.
-    </p>
-    <div class="qr-container">
-      <canvas id="main-qr"></canvas>
-      <div class="qr-label">Tiffany's 40th Birthday</div>
-      <div class="qr-url">tiffany-40.github.io/birthday</div>
-    </div>
-  </div>
-</section>
+
 
 <!-- FOOTER -->
 <footer>

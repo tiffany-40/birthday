@@ -23,12 +23,13 @@
     --text: #2D1F42;
     --text-light: #6B5B8A;
     --white: #FFFFFF;
+    /* Seventeen accent – caratbong pale blue, used very subtly */
+    --svt-blue: #A8C8E8;
+    --svt-blue-pale: #EAF3FB;
   }
 
   * { margin: 0; padding: 0; box-sizing: border-box; }
-
   html { scroll-behavior: smooth; }
-
   body {
     font-family: 'DM Sans', sans-serif;
     background: var(--cream);
@@ -38,77 +39,42 @@
 
   /* ── NAV ── */
   nav {
-    position: fixed;
-    top: 0; left: 0; right: 0;
+    position: fixed; top: 0; left: 0; right: 0;
     z-index: 1000;
-    background: rgba(253, 248, 240, 0.95);
+    background: rgba(253,248,240,0.95);
     backdrop-filter: blur(10px);
-    border-bottom: 1px solid rgba(201, 168, 76, 0.25);
-    padding: 0 1.5rem;
-    height: 60px;
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
+    border-bottom: 1px solid rgba(201,168,76,0.25);
+    padding: 0 1.5rem; height: 60px;
+    display: flex; align-items: center; justify-content: space-between;
   }
-
   .nav-logo {
     font-family: 'Playfair Display', serif;
-    font-size: 1.1rem;
-    font-style: italic;
-    color: var(--purple);
-    letter-spacing: 0.02em;
+    font-size: 1.05rem; font-style: italic;
+    color: var(--purple); letter-spacing: 0.02em;
+    display: flex; align-items: center; gap: 0.4rem;
   }
-
-  .nav-links {
-    display: flex;
-    gap: 1.5rem;
-    list-style: none;
-  }
-
+  /* tiny caratbong lightstick in nav logo */
+  .nav-logo .cb { font-size: 0.85rem; opacity: 0.65; }
+  .nav-links { display: flex; gap: 1.5rem; list-style: none; }
   .nav-links a {
-    font-size: 0.78rem;
-    letter-spacing: 0.12em;
-    text-transform: uppercase;
-    color: var(--text-light);
-    text-decoration: none;
-    font-weight: 500;
+    font-size: 0.78rem; letter-spacing: 0.12em; text-transform: uppercase;
+    color: var(--text-light); text-decoration: none; font-weight: 500;
     transition: color 0.2s;
   }
-
   .nav-links a:hover { color: var(--gold); }
-
-  .hamburger {
-    display: none;
-    flex-direction: column;
-    gap: 5px;
-    cursor: pointer;
-    padding: 4px;
-  }
-  .hamburger span {
-    width: 24px; height: 2px;
-    background: var(--purple);
-    border-radius: 2px;
-    transition: all 0.3s;
-  }
+  .hamburger { display: none; flex-direction: column; gap: 5px; cursor: pointer; padding: 4px; }
+  .hamburger span { width: 24px; height: 2px; background: var(--purple); border-radius: 2px; transition: all 0.3s; }
 
   /* ── HERO ── */
   .hero {
-    min-height: 100vh;
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    justify-content: center;
-    text-align: center;
-    padding: 6rem 1.5rem 4rem;
-    position: relative;
-    overflow: hidden;
+    min-height: 100vh; display: flex; flex-direction: column;
+    align-items: center; justify-content: center;
+    text-align: center; padding: 6rem 1.5rem 4rem;
+    position: relative; overflow: hidden;
     background: linear-gradient(170deg, #1A1225 0%, #2D1845 40%, #3E2460 70%, #5B3E7E 100%);
   }
-
   .hero::before {
-    content: '';
-    position: absolute;
-    inset: 0;
+    content: ''; position: absolute; inset: 0;
     background:
       radial-gradient(ellipse 60% 50% at 20% 30%, rgba(201,168,76,0.12) 0%, transparent 60%),
       radial-gradient(ellipse 50% 60% at 80% 70%, rgba(168,142,199,0.18) 0%, transparent 60%),
@@ -116,21 +82,23 @@
     pointer-events: none;
   }
 
-  .confetti-field {
-    position: absolute;
-    inset: 0;
-    pointer-events: none;
-    overflow: hidden;
+  /* ── Caratbong glow orbs – very subtle in hero bg ── */
+  .svt-orb {
+    position: absolute; border-radius: 50%; pointer-events: none;
+    background: radial-gradient(circle, rgba(168,200,232,0.18) 0%, transparent 70%);
+    animation: orbFloat ease-in-out infinite;
+  }
+  @keyframes orbFloat {
+    0%,100% { transform: translateY(0) scale(1); opacity: 0.6; }
+    50% { transform: translateY(-20px) scale(1.05); opacity: 0.9; }
   }
 
+  .confetti-field { position: absolute; inset: 0; pointer-events: none; overflow: hidden; }
   .confetti-piece {
-    position: absolute;
-    width: 6px; height: 6px;
-    border-radius: 50%;
-    opacity: 0;
+    position: absolute; width: 6px; height: 6px;
+    border-radius: 50%; opacity: 0;
     animation: confetti-fall linear infinite;
   }
-
   @keyframes confetti-fall {
     0% { transform: translateY(-20px) rotate(0deg); opacity: 0; }
     10% { opacity: 0.8; }
@@ -139,189 +107,102 @@
   }
 
   .hero-eyebrow {
-    font-size: 0.72rem;
-    letter-spacing: 0.25em;
-    text-transform: uppercase;
-    color: var(--gold-light);
-    margin-bottom: 1.5rem;
-    font-weight: 500;
+    font-size: 0.72rem; letter-spacing: 0.25em; text-transform: uppercase;
+    color: var(--gold-light); margin-bottom: 1.5rem; font-weight: 500;
     animation: fadeUp 0.8s ease both;
   }
-
   .hero-name {
     font-family: 'Playfair Display', serif;
-    font-size: clamp(3.5rem, 12vw, 8rem);
-    font-weight: 900;
-    line-height: 0.95;
-    color: var(--white);
-    margin-bottom: 0.5rem;
-    animation: fadeUp 0.8s 0.1s ease both;
+    font-size: clamp(3.5rem,12vw,8rem); font-weight: 900;
+    line-height: 0.95; color: var(--white);
+    margin-bottom: 0.5rem; animation: fadeUp 0.8s 0.1s ease both;
   }
-
   .hero-name span {
     display: block;
     background: linear-gradient(135deg, var(--gold-light), var(--gold), #A07830);
-    -webkit-background-clip: text;
-    -webkit-text-fill-color: transparent;
-    background-clip: text;
+    -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text;
   }
-
   .hero-tagline {
     font-family: 'Cormorant Garamond', serif;
-    font-size: clamp(1.3rem, 4vw, 2rem);
-    font-style: italic;
-    color: var(--purple-light);
-    margin-bottom: 2.5rem;
+    font-size: clamp(1.3rem,4vw,2rem); font-style: italic;
+    color: var(--purple-light); margin-bottom: 2.5rem;
     animation: fadeUp 0.8s 0.2s ease both;
   }
-
-  .hero-divider {
-    width: 80px;
-    height: 1px;
-    background: linear-gradient(90deg, transparent, var(--gold), transparent);
-    margin: 0 auto 2.5rem;
-    animation: fadeUp 0.8s 0.3s ease both;
+  /* Subtle "17" easter egg tucked under tagline */
+  .hero-svt-hint {
+    font-size: 0.68rem; letter-spacing: 0.22em; text-transform: uppercase;
+    color: rgba(168,200,232,0.5); margin-bottom: 1.5rem;
+    animation: fadeUp 0.8s 0.25s ease both;
   }
-
+  .hero-divider {
+    width: 80px; height: 1px;
+    background: linear-gradient(90deg, transparent, var(--gold), transparent);
+    margin: 0 auto 2.5rem; animation: fadeUp 0.8s 0.3s ease both;
+  }
   .hero-details {
-    display: flex;
-    flex-wrap: wrap;
-    gap: 1rem 2rem;
-    justify-content: center;
-    margin-bottom: 3rem;
+    display: flex; flex-wrap: wrap; gap: 1rem 2rem;
+    justify-content: center; margin-bottom: 3rem;
     animation: fadeUp 0.8s 0.4s ease both;
   }
-
   .hero-detail-item {
-    display: flex;
-    align-items: center;
-    gap: 0.5rem;
-    color: rgba(255,255,255,0.85);
-    font-size: 0.95rem;
+    display: flex; align-items: center; gap: 0.5rem;
+    color: rgba(255,255,255,0.85); font-size: 0.95rem;
   }
-
-  .hero-detail-item .icon {
-    font-size: 1rem;
-  }
-
   .hero-cta {
-    display: flex;
-    gap: 1rem;
-    flex-wrap: wrap;
-    justify-content: center;
-    animation: fadeUp 0.8s 0.5s ease both;
+    display: flex; gap: 1rem; flex-wrap: wrap;
+    justify-content: center; animation: fadeUp 0.8s 0.5s ease both;
   }
-
-  .btn-primary {
-    padding: 0.85rem 2rem;
-    background: linear-gradient(135deg, var(--gold), var(--gold-light));
-    color: var(--dark);
-    border: none;
-    border-radius: 50px;
-    font-family: 'DM Sans', sans-serif;
-    font-size: 0.85rem;
-    font-weight: 500;
-    letter-spacing: 0.08em;
-    text-transform: uppercase;
-    cursor: pointer;
-    text-decoration: none;
-    display: inline-block;
-    transition: transform 0.2s, box-shadow 0.2s;
-    box-shadow: 0 4px 20px rgba(201,168,76,0.4);
-  }
-
-  .btn-primary:hover {
-    transform: translateY(-2px);
-    box-shadow: 0 8px 30px rgba(201,168,76,0.5);
-  }
-
-  .btn-ghost {
-    padding: 0.85rem 2rem;
-    background: transparent;
-    color: var(--white);
-    border: 1px solid rgba(255,255,255,0.3);
-    border-radius: 50px;
-    font-family: 'DM Sans', sans-serif;
-    font-size: 0.85rem;
-    font-weight: 500;
-    letter-spacing: 0.08em;
-    text-transform: uppercase;
-    cursor: pointer;
-    text-decoration: none;
-    display: inline-block;
-    transition: all 0.2s;
-  }
-
-  .btn-ghost:hover {
-    background: rgba(255,255,255,0.08);
-    border-color: var(--gold-light);
-    color: var(--gold-light);
-  }
-
   @keyframes fadeUp {
     from { opacity: 0; transform: translateY(30px); }
     to { opacity: 1; transform: translateY(0); }
   }
 
-  /* ── SCROLL ARROW ── */
+  .btn-primary {
+    padding: 0.85rem 2rem;
+    background: linear-gradient(135deg, var(--gold), var(--gold-light));
+    color: var(--dark); border: none; border-radius: 50px;
+    font-family: 'DM Sans', sans-serif; font-size: 0.85rem; font-weight: 500;
+    letter-spacing: 0.08em; text-transform: uppercase; cursor: pointer;
+    text-decoration: none; display: inline-block;
+    transition: transform 0.2s, box-shadow 0.2s;
+    box-shadow: 0 4px 20px rgba(201,168,76,0.4);
+  }
+  .btn-primary:hover { transform: translateY(-2px); box-shadow: 0 8px 30px rgba(201,168,76,0.5); }
+  .btn-ghost {
+    padding: 0.85rem 2rem; background: transparent; color: var(--white);
+    border: 1px solid rgba(255,255,255,0.3); border-radius: 50px;
+    font-family: 'DM Sans', sans-serif; font-size: 0.85rem; font-weight: 500;
+    letter-spacing: 0.08em; text-transform: uppercase; cursor: pointer;
+    text-decoration: none; display: inline-block; transition: all 0.2s;
+  }
+  .btn-ghost:hover { background: rgba(255,255,255,0.08); border-color: var(--gold-light); color: var(--gold-light); }
+
   .scroll-hint {
-    position: absolute;
-    bottom: 2rem;
-    left: 50%;
-    transform: translateX(-50%);
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    gap: 0.4rem;
-    color: rgba(255,255,255,0.4);
-    font-size: 0.65rem;
-    letter-spacing: 0.15em;
-    text-transform: uppercase;
-    animation: bounceDown 2s ease infinite;
+    position: absolute; bottom: 2rem; left: 50%; transform: translateX(-50%);
+    display: flex; flex-direction: column; align-items: center; gap: 0.4rem;
+    color: rgba(255,255,255,0.35); font-size: 0.65rem; letter-spacing: 0.15em;
+    text-transform: uppercase; animation: bounceDown 2s ease infinite;
   }
-
-  .scroll-hint::after {
-    content: '↓';
-    font-size: 1rem;
-  }
-
+  .scroll-hint::after { content: '↓'; font-size: 1rem; }
   @keyframes bounceDown {
-    0%, 100% { transform: translateX(-50%) translateY(0); }
+    0%,100% { transform: translateX(-50%) translateY(0); }
     50% { transform: translateX(-50%) translateY(6px); }
   }
 
   /* ── SECTIONS ── */
-  section {
-    padding: 5rem 1.5rem;
-  }
-
-  .section-inner {
-    max-width: 900px;
-    margin: 0 auto;
-  }
-
+  section { padding: 5rem 1.5rem; }
+  .section-inner { max-width: 900px; margin: 0 auto; }
   .section-label {
-    font-size: 0.7rem;
-    letter-spacing: 0.25em;
-    text-transform: uppercase;
-    color: var(--gold);
-    font-weight: 500;
-    margin-bottom: 0.75rem;
-    display: block;
+    font-size: 0.7rem; letter-spacing: 0.25em; text-transform: uppercase;
+    color: var(--gold); font-weight: 500; margin-bottom: 0.75rem; display: block;
   }
-
   .section-title {
     font-family: 'Playfair Display', serif;
-    font-size: clamp(2rem, 5vw, 3rem);
-    font-weight: 700;
-    color: var(--purple);
-    line-height: 1.1;
-    margin-bottom: 1rem;
+    font-size: clamp(2rem,5vw,3rem); font-weight: 700;
+    color: var(--purple); line-height: 1.1; margin-bottom: 1rem;
   }
-
   .section-divider {
-    width: 50px;
-    height: 2px;
+    width: 50px; height: 2px;
     background: linear-gradient(90deg, var(--gold), transparent);
     margin-bottom: 2rem;
   }
@@ -329,761 +210,318 @@
   /* ── COUNTDOWN ── */
   #countdown {
     background: linear-gradient(145deg, var(--purple) 0%, #3E2460 100%);
-    color: white;
-    text-align: center;
+    color: white; text-align: center; position: relative; overflow: hidden;
   }
-
+  /* very faint "17" watermark behind countdown */
+  #countdown::after {
+    content: '17';
+    position: absolute; bottom: -1rem; right: 2rem;
+    font-family: 'Playfair Display', serif;
+    font-size: 10rem; font-weight: 900; line-height: 1;
+    color: rgba(255,255,255,0.03); pointer-events: none; user-select: none;
+  }
   #countdown .section-title { color: var(--gold-light); }
   #countdown .section-label { color: rgba(255,255,255,0.6); }
-
   .countdown-subtitle {
-    color: rgba(255,255,255,0.65);
-    font-family: 'Cormorant Garamond', serif;
-    font-style: italic;
-    font-size: 1.2rem;
-    margin-bottom: 2.5rem;
+    color: rgba(255,255,255,0.65); font-family: 'Cormorant Garamond', serif;
+    font-style: italic; font-size: 1.2rem; margin-bottom: 2.5rem;
   }
-
-  .countdown-grid {
-    display: flex;
-    gap: 1.5rem;
-    justify-content: center;
-    flex-wrap: wrap;
-  }
-
-  .countdown-unit {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    min-width: 90px;
-  }
-
+  .countdown-grid { display: flex; gap: 1.5rem; justify-content: center; flex-wrap: wrap; }
+  .countdown-unit { display: flex; flex-direction: column; align-items: center; min-width: 90px; }
   .countdown-number {
     font-family: 'Playfair Display', serif;
-    font-size: clamp(3rem, 8vw, 5rem);
-    font-weight: 900;
-    line-height: 1;
+    font-size: clamp(3rem,8vw,5rem); font-weight: 900; line-height: 1;
     background: linear-gradient(135deg, var(--gold-light), var(--gold));
-    -webkit-background-clip: text;
-    -webkit-text-fill-color: transparent;
-    background-clip: text;
+    -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text;
   }
+  .countdown-label { font-size: 0.65rem; letter-spacing: 0.2em; text-transform: uppercase; color: rgba(255,255,255,0.5); margin-top: 0.25rem; }
+  .countdown-sep { font-family: 'Playfair Display', serif; font-size: 3rem; color: var(--gold); opacity: 0.4; align-self: center; margin-top: -0.5rem; }
 
-  .countdown-label {
-    font-size: 0.65rem;
-    letter-spacing: 0.2em;
-    text-transform: uppercase;
-    color: rgba(255,255,255,0.5);
-    margin-top: 0.25rem;
-  }
-
-  .countdown-sep {
-    font-family: 'Playfair Display', serif;
-    font-size: 3rem;
-    color: var(--gold);
-    opacity: 0.4;
-    align-self: center;
-    margin-top: -0.5rem;
-  }
-
-  /* ── EVENT DETAILS ── */
-  #details {
-    background: var(--cream);
-  }
-
-  .details-grid {
-    display: grid;
-    grid-template-columns: 1fr 1fr;
-    gap: 1.5rem;
-    margin-bottom: 2rem;
-  }
-
+  /* ── DETAILS ── */
+  #details { background: var(--cream); }
+  .details-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 1.5rem; margin-bottom: 2rem; }
   .detail-card {
-    background: var(--white);
-    border: 1px solid rgba(201,168,76,0.2);
-    border-radius: 16px;
-    padding: 1.75rem;
-    display: flex;
-    align-items: flex-start;
-    gap: 1rem;
+    background: var(--white); border: 1px solid rgba(201,168,76,0.2);
+    border-radius: 16px; padding: 1.75rem;
+    display: flex; align-items: flex-start; gap: 1rem;
     transition: transform 0.2s, box-shadow 0.2s;
   }
-
-  .detail-card:hover {
-    transform: translateY(-3px);
-    box-shadow: 0 12px 30px rgba(91,62,126,0.1);
-  }
-
-  .detail-icon {
-    font-size: 1.8rem;
-    line-height: 1;
-    flex-shrink: 0;
-  }
-
-  .detail-card h3 {
-    font-size: 0.68rem;
-    letter-spacing: 0.18em;
-    text-transform: uppercase;
-    color: var(--gold);
-    font-weight: 500;
-    margin-bottom: 0.35rem;
-  }
-
-  .detail-card p {
-    color: var(--text);
-    font-size: 0.95rem;
-    line-height: 1.5;
-  }
-
+  .detail-card:hover { transform: translateY(-3px); box-shadow: 0 12px 30px rgba(91,62,126,0.1); }
+  .detail-icon { font-size: 1.8rem; line-height: 1; flex-shrink: 0; }
+  .detail-card h3 { font-size: 0.68rem; letter-spacing: 0.18em; text-transform: uppercase; color: var(--gold); font-weight: 500; margin-bottom: 0.35rem; }
+  .detail-card p { color: var(--text); font-size: 0.95rem; line-height: 1.5; }
   .detail-note {
     background: linear-gradient(135deg, var(--purple-pale), #F8F0FF);
     border-left: 3px solid var(--purple-light);
-    border-radius: 0 12px 12px 0;
-    padding: 1.25rem 1.5rem;
-    font-family: 'Cormorant Garamond', serif;
-    font-size: 1.05rem;
-    font-style: italic;
-    color: var(--purple);
-    line-height: 1.7;
+    border-radius: 0 12px 12px 0; padding: 1.25rem 1.5rem;
+    font-family: 'Cormorant Garamond', serif; font-size: 1.05rem;
+    font-style: italic; color: var(--purple); line-height: 1.7;
   }
 
   /* ── GIFTS ── */
-  #gifts {
-    background: #F7F2FF;
-  }
-
+  #gifts { background: #F7F2FF; }
   .gift-note-box {
-    background: white;
-    border-radius: 20px;
-    padding: 2rem;
-    margin-bottom: 2rem;
+    background: white; border-radius: 20px; padding: 2rem; margin-bottom: 2rem;
     box-shadow: 0 4px 20px rgba(91,62,126,0.08);
-    font-family: 'Cormorant Garamond', serif;
-    font-size: 1.1rem;
-    color: var(--text);
-    line-height: 1.8;
-    font-style: italic;
+    font-family: 'Cormorant Garamond', serif; font-size: 1.1rem;
+    color: var(--text); line-height: 1.8; font-style: italic;
     border-top: 3px solid var(--gold);
   }
-
-  .gift-cards {
-    display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
-    gap: 1.25rem;
-    margin-bottom: 2.5rem;
-  }
-
+  .gift-cards { display: grid; grid-template-columns: repeat(auto-fit, minmax(260px, 1fr)); gap: 1.25rem; margin-bottom: 2.5rem; }
   .gift-card {
-    background: white;
-    border-radius: 18px;
-    padding: 1.75rem;
-    text-align: center;
-    border: 1px solid rgba(201,168,76,0.2);
+    background: white; border-radius: 18px; padding: 1.75rem;
+    text-align: center; border: 1px solid rgba(201,168,76,0.2);
     transition: transform 0.2s, box-shadow 0.2s;
-    position: relative;
-    overflow: hidden;
+    position: relative; overflow: hidden;
   }
-
   .gift-card::before {
-    content: '';
-    position: absolute;
-    top: 0; left: 0; right: 0;
-    height: 4px;
+    content: ''; position: absolute; top: 0; left: 0; right: 0; height: 4px;
     background: linear-gradient(90deg, var(--purple), var(--gold));
   }
-
-  .gift-card:hover {
-    transform: translateY(-4px);
-    box-shadow: 0 16px 40px rgba(91,62,126,0.15);
-  }
-
+  .gift-card:hover { transform: translateY(-4px); box-shadow: 0 16px 40px rgba(91,62,126,0.15); }
   .gift-card-icon { font-size: 2.5rem; margin-bottom: 0.75rem; }
-  .gift-card h3 {
-    font-family: 'Playfair Display', serif;
-    font-size: 1.1rem;
-    color: var(--purple);
-    margin-bottom: 0.4rem;
-  }
-  .gift-card p {
-    font-size: 0.85rem;
-    color: var(--text-light);
-    line-height: 1.5;
-    margin-bottom: 1rem;
-  }
-
-  .fund-bar-wrap {
-    background: #EDE5F5;
-    border-radius: 50px;
-    height: 8px;
-    margin-bottom: 0.4rem;
-    overflow: hidden;
-  }
-
-  .fund-bar {
-    height: 100%;
-    border-radius: 50px;
-    background: linear-gradient(90deg, var(--purple-mid), var(--gold));
-    transition: width 1.5s cubic-bezier(0.4, 0, 0.2, 1);
-  }
-
-  .fund-amounts {
-    display: flex;
-    justify-content: space-between;
-    font-size: 0.75rem;
-    color: var(--text-light);
-    margin-bottom: 1rem;
-  }
-
-  .fund-amounts span:first-child { color: var(--purple); font-weight: 500; }
-
+  .gift-card h3 { font-family: 'Playfair Display', serif; font-size: 1.1rem; color: var(--purple); margin-bottom: 0.4rem; }
+  .gift-card p { font-size: 0.85rem; color: var(--text-light); line-height: 1.5; margin-bottom: 1.25rem; }
   .venmo-btn {
-    display: inline-flex;
-    align-items: center;
-    gap: 0.5rem;
-    padding: 0.65rem 1.4rem;
-    background: #3D95CE;
-    color: white;
-    border-radius: 50px;
-    font-size: 0.82rem;
-    font-weight: 500;
-    text-decoration: none;
-    transition: all 0.2s;
-    letter-spacing: 0.03em;
+    display: inline-flex; align-items: center; gap: 0.5rem;
+    padding: 0.65rem 1.4rem; background: #3D95CE; color: white;
+    border-radius: 50px; font-size: 0.82rem; font-weight: 500;
+    text-decoration: none; transition: all 0.2s; letter-spacing: 0.03em;
   }
-
-  .venmo-btn:hover {
-    background: #2d7db5;
-    transform: translateY(-1px);
-    box-shadow: 0 4px 15px rgba(61,149,206,0.4);
-  }
-
+  .venmo-btn:hover { background: #2d7db5; transform: translateY(-1px); box-shadow: 0 4px 15px rgba(61,149,206,0.4); }
   .venmo-icon {
-    width: 18px; height: 18px;
-    background: white;
-    border-radius: 4px;
+    width: 18px; height: 18px; background: white; border-radius: 4px;
     display: flex; align-items: center; justify-content: center;
-    font-weight: 900;
-    font-size: 0.75rem;
-    color: #3D95CE;
-    flex-shrink: 0;
+    font-weight: 900; font-size: 0.75rem; color: #3D95CE; flex-shrink: 0;
   }
-
   .gift-qr-section {
-    text-align: center;
-    padding: 2rem;
-    background: white;
-    border-radius: 20px;
-    box-shadow: 0 4px 20px rgba(91,62,126,0.08);
+    text-align: center; padding: 2rem; background: white;
+    border-radius: 20px; box-shadow: 0 4px 20px rgba(91,62,126,0.08);
   }
-
-  .gift-qr-section h3 {
-    font-family: 'Playfair Display', serif;
-    color: var(--purple);
-    margin-bottom: 0.5rem;
-  }
-
-  .gift-qr-section p {
-    font-size: 0.85rem;
-    color: var(--text-light);
-    margin-bottom: 1rem;
-  }
-
+  .gift-qr-section h3 { font-family: 'Playfair Display', serif; color: var(--purple); margin-bottom: 0.5rem; }
+  .gift-qr-section p { font-size: 0.85rem; color: var(--text-light); margin-bottom: 1rem; }
   #venmo-qr { margin: 0 auto; }
 
-  /* ── RSVP ── */
-  #rsvp {
-    background: linear-gradient(170deg, var(--dark) 0%, #2D1845 100%);
-    color: white;
+  /* ── SVT CHARACTERS strip – between gifts and RSVP ── */
+  .svt-strip {
+    background: linear-gradient(90deg, var(--svt-blue-pale), #F5EEFF, var(--svt-blue-pale));
+    padding: 1.5rem 1.5rem;
+    text-align: center;
+    border-top: 1px solid rgba(168,200,232,0.3);
+    border-bottom: 1px solid rgba(168,200,232,0.3);
+    overflow: hidden;
+    position: relative;
   }
+  .svt-characters {
+    display: flex; justify-content: center; align-items: flex-end;
+    gap: clamp(0.6rem,3vw,2rem); flex-wrap: nowrap;
+  }
+  .svt-char {
+    display: flex; flex-direction: column; align-items: center;
+    gap: 0.3rem; opacity: 0.82;
+    animation: charBounce ease-in-out infinite;
+  }
+  .svt-char:nth-child(odd) { animation-direction: alternate; }
+  .svt-char:nth-child(even) { animation-direction: alternate-reverse; }
+  @keyframes charBounce {
+    0% { transform: translateY(0); }
+    100% { transform: translateY(-6px); }
+  }
+  /* each character is a cute SVG blob with a face */
+  .svt-char svg { width: clamp(36px,7vw,52px); height: clamp(36px,7vw,52px); }
+  .svt-char-name { font-size: 0.6rem; letter-spacing: 0.12em; color: var(--purple-light); text-transform: uppercase; font-weight: 500; }
+  .svt-caption {
+    margin-top: 0.85rem;
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 0.82rem; font-style: italic;
+    color: var(--text-light); letter-spacing: 0.05em;
+  }
+  /* caratbong lightstick icon inline */
+  .svt-caption .cb-icon { font-size: 1rem; }
 
+  /* ── RSVP ── */
+  #rsvp { background: linear-gradient(170deg, var(--dark) 0%, #2D1845 100%); color: white; }
   #rsvp .section-title { color: var(--gold-light); }
   #rsvp .section-label { color: rgba(255,255,255,0.5); }
-
   .rsvp-form {
-    background: rgba(255,255,255,0.04);
-    border: 1px solid rgba(255,255,255,0.1);
-    border-radius: 24px;
-    padding: 2.5rem;
-    backdrop-filter: blur(10px);
+    background: rgba(255,255,255,0.04); border: 1px solid rgba(255,255,255,0.1);
+    border-radius: 24px; padding: 2.5rem; backdrop-filter: blur(10px);
   }
-
-  .form-grid {
-    display: grid;
-    grid-template-columns: 1fr 1fr;
-    gap: 1.25rem;
-    margin-bottom: 1.25rem;
-  }
-
-  .form-group {
-    display: flex;
-    flex-direction: column;
-    gap: 0.4rem;
-  }
-
+  .form-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 1.25rem; margin-bottom: 1.25rem; }
+  .form-group { display: flex; flex-direction: column; gap: 0.4rem; }
   .form-group.full { grid-column: 1 / -1; }
-
-  .form-group label {
-    font-size: 0.72rem;
-    letter-spacing: 0.15em;
-    text-transform: uppercase;
-    color: rgba(255,255,255,0.55);
-    font-weight: 500;
+  .form-group label { font-size: 0.72rem; letter-spacing: 0.15em; text-transform: uppercase; color: rgba(255,255,255,0.55); font-weight: 500; }
+  .form-group input, .form-group select, .form-group textarea {
+    background: rgba(255,255,255,0.07); border: 1px solid rgba(255,255,255,0.12);
+    border-radius: 10px; padding: 0.75rem 1rem; color: white;
+    font-family: 'DM Sans', sans-serif; font-size: 0.95rem; outline: none;
+    transition: border-color 0.2s, background 0.2s; -webkit-appearance: none;
   }
-
-  .form-group input,
-  .form-group select,
-  .form-group textarea {
-    background: rgba(255,255,255,0.07);
-    border: 1px solid rgba(255,255,255,0.12);
-    border-radius: 10px;
-    padding: 0.75rem 1rem;
-    color: white;
-    font-family: 'DM Sans', sans-serif;
-    font-size: 0.95rem;
-    outline: none;
-    transition: border-color 0.2s, background 0.2s;
-    -webkit-appearance: none;
-  }
-
-  .form-group input::placeholder,
-  .form-group textarea::placeholder { color: rgba(255,255,255,0.25); }
-
+  .form-group input::placeholder, .form-group textarea::placeholder { color: rgba(255,255,255,0.25); }
   .form-group select option { background: #2D1845; color: white; }
-
-  .form-group input:focus,
-  .form-group select:focus,
-  .form-group textarea:focus {
-    border-color: var(--gold);
-    background: rgba(255,255,255,0.1);
+  .form-group input:focus, .form-group select:focus, .form-group textarea:focus {
+    border-color: var(--gold); background: rgba(255,255,255,0.1);
   }
-
   .form-group textarea { resize: vertical; min-height: 100px; }
-
-  .form-submit-row {
-    display: flex;
-    justify-content: center;
-    margin-top: 1.5rem;
-  }
-
+  .form-submit-row { display: flex; justify-content: center; margin-top: 1.5rem; }
   .btn-submit {
     padding: 1rem 3rem;
     background: linear-gradient(135deg, var(--gold), var(--gold-light));
-    color: var(--dark);
-    border: none;
-    border-radius: 50px;
-    font-family: 'DM Sans', sans-serif;
-    font-size: 0.85rem;
-    font-weight: 600;
-    letter-spacing: 0.1em;
-    text-transform: uppercase;
-    cursor: pointer;
-    transition: all 0.2s;
-    box-shadow: 0 4px 20px rgba(201,168,76,0.3);
+    color: var(--dark); border: none; border-radius: 50px;
+    font-family: 'DM Sans', sans-serif; font-size: 0.85rem; font-weight: 600;
+    letter-spacing: 0.1em; text-transform: uppercase; cursor: pointer;
+    transition: all 0.2s; box-shadow: 0 4px 20px rgba(201,168,76,0.3);
   }
-
-  .btn-submit:hover {
-    transform: translateY(-2px);
-    box-shadow: 0 8px 30px rgba(201,168,76,0.5);
-  }
-
-  .btn-submit:disabled {
-    opacity: 0.6;
-    cursor: not-allowed;
-    transform: none;
-  }
-
-  .form-success {
-    text-align: center;
-    padding: 3rem 2rem;
-  }
-
+  .btn-submit:hover { transform: translateY(-2px); box-shadow: 0 8px 30px rgba(201,168,76,0.5); }
+  .btn-submit:disabled { opacity: 0.6; cursor: not-allowed; transform: none; }
+  .form-success { text-align: center; padding: 3rem 2rem; }
   .form-success .success-icon { font-size: 3.5rem; margin-bottom: 1rem; }
-  .form-success h3 {
-    font-family: 'Playfair Display', serif;
-    font-size: 1.8rem;
-    color: var(--gold-light);
-    margin-bottom: 0.5rem;
-  }
+  .form-success h3 { font-family: 'Playfair Display', serif; font-size: 1.8rem; color: var(--gold-light); margin-bottom: 0.5rem; }
   .form-success p { color: rgba(255,255,255,0.65); font-size: 1rem; }
-
-  .rsvp-disclaimer {
-    text-align: center;
-    margin-top: 1.25rem;
-    font-size: 0.8rem;
-    color: rgba(255,255,255,0.3);
-    font-style: italic;
-  }
+  .rsvp-disclaimer { text-align: center; margin-top: 1.25rem; font-size: 0.8rem; color: rgba(255,255,255,0.3); font-style: italic; }
 
   /* ── MEMORY WALL ── */
-  #memories {
-    background: var(--cream);
-  }
-
-  .memory-intro {
-    font-family: 'Cormorant Garamond', serif;
-    font-size: 1.15rem;
-    font-style: italic;
-    color: var(--text-light);
-    line-height: 1.7;
-    margin-bottom: 2rem;
-  }
-
-  .memory-grid {
-    display: grid;
-    grid-template-columns: repeat(auto-fill, minmax(260px, 1fr));
-    gap: 1.25rem;
-    margin-bottom: 2.5rem;
-  }
-
+  #memories { background: var(--cream); }
+  .memory-intro { font-family: 'Cormorant Garamond', serif; font-size: 1.15rem; font-style: italic; color: var(--text-light); line-height: 1.7; margin-bottom: 2rem; }
+  .memory-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(260px, 1fr)); gap: 1.25rem; margin-bottom: 2.5rem; }
   .memory-card {
-    background: white;
-    border-radius: 16px;
-    padding: 1.5rem;
+    background: white; border-radius: 16px; padding: 1.5rem;
     box-shadow: 0 2px 12px rgba(91,62,126,0.07);
     border: 1px solid rgba(201,168,76,0.15);
-    position: relative;
-    transition: transform 0.2s;
+    position: relative; transition: transform 0.2s;
     animation: fadeIn 0.5s ease both;
   }
-
   .memory-card:hover { transform: translateY(-3px); }
-
   .memory-card::before {
-    content: '"';
-    position: absolute;
-    top: 0.5rem; left: 1rem;
-    font-family: 'Playfair Display', serif;
-    font-size: 4rem;
-    line-height: 1;
+    content: '"'; position: absolute; top: 0.5rem; left: 1rem;
+    font-family: 'Playfair Display', serif; font-size: 4rem; line-height: 1;
     color: var(--gold-pale);
   }
-
-  .memory-text {
-    font-family: 'Cormorant Garamond', serif;
-    font-size: 1rem;
-    line-height: 1.65;
-    color: var(--text);
-    margin-bottom: 1rem;
-    padding-top: 1rem;
-    font-style: italic;
-  }
-
-  .memory-author {
-    font-size: 0.78rem;
-    letter-spacing: 0.1em;
-    text-transform: uppercase;
-    color: var(--gold);
-    font-weight: 500;
-  }
-
-  .memory-date {
-    font-size: 0.72rem;
-    color: var(--text-light);
-    margin-top: 0.2rem;
-  }
-
-  @keyframes fadeIn {
-    from { opacity: 0; transform: translateY(20px); }
-    to { opacity: 1; transform: translateY(0); }
-  }
-
-  /* Memory form */
-  .memory-form {
-    background: var(--purple-pale);
-    border-radius: 20px;
-    padding: 2rem;
-    border: 1px solid rgba(91,62,126,0.15);
-  }
-
-  .memory-form h3 {
-    font-family: 'Playfair Display', serif;
-    font-size: 1.3rem;
-    color: var(--purple);
-    margin-bottom: 1.25rem;
-  }
-
-  .memory-form-inner {
-    display: flex;
-    flex-direction: column;
-    gap: 1rem;
-  }
-
+  .memory-text { font-family: 'Cormorant Garamond', serif; font-size: 1rem; line-height: 1.65; color: var(--text); margin-bottom: 1rem; padding-top: 1rem; font-style: italic; }
+  .memory-author { font-size: 0.78rem; letter-spacing: 0.1em; text-transform: uppercase; color: var(--gold); font-weight: 500; }
+  .memory-date { font-size: 0.72rem; color: var(--text-light); margin-top: 0.2rem; }
+  @keyframes fadeIn { from { opacity: 0; transform: translateY(20px); } to { opacity: 1; transform: translateY(0); } }
+  .memory-form { background: var(--purple-pale); border-radius: 20px; padding: 2rem; border: 1px solid rgba(91,62,126,0.15); }
+  .memory-form h3 { font-family: 'Playfair Display', serif; font-size: 1.3rem; color: var(--purple); margin-bottom: 1.25rem; }
+  .memory-form-inner { display: flex; flex-direction: column; gap: 1rem; }
   .mf-input {
-    padding: 0.75rem 1rem;
-    border: 1px solid rgba(91,62,126,0.2);
-    border-radius: 10px;
-    font-family: 'DM Sans', sans-serif;
-    font-size: 0.95rem;
-    color: var(--text);
-    background: white;
-    outline: none;
-    transition: border-color 0.2s;
-    width: 100%;
+    padding: 0.75rem 1rem; border: 1px solid rgba(91,62,126,0.2);
+    border-radius: 10px; font-family: 'DM Sans', sans-serif; font-size: 0.95rem;
+    color: var(--text); background: white; outline: none;
+    transition: border-color 0.2s; width: 100%;
   }
-
   .mf-input:focus { border-color: var(--purple-light); }
   .mf-input::placeholder { color: #b0a0c0; }
-
-  .mf-textarea {
-    min-height: 110px;
-    resize: vertical;
-  }
+  .mf-textarea { min-height: 110px; resize: vertical; }
 
   /* ── GALLERY ── */
-  #gallery {
-    background: #F7F2FF;
-  }
-
-  .gallery-intro {
-    font-family: 'Cormorant Garamond', serif;
-    font-style: italic;
-    color: var(--text-light);
-    font-size: 1.1rem;
-    margin-bottom: 2rem;
-    line-height: 1.7;
-  }
-
-  .gallery-categories {
-    display: flex;
-    gap: 0.75rem;
-    flex-wrap: wrap;
-    margin-bottom: 1.75rem;
-  }
-
+  #gallery { background: #F7F2FF; }
+  .gallery-intro { font-family: 'Cormorant Garamond', serif; font-style: italic; color: var(--text-light); font-size: 1.1rem; margin-bottom: 2rem; line-height: 1.7; }
+  .gallery-categories { display: flex; gap: 0.75rem; flex-wrap: wrap; margin-bottom: 1.75rem; }
   .gallery-filter {
-    padding: 0.45rem 1.1rem;
-    border-radius: 50px;
-    border: 1px solid rgba(91,62,126,0.25);
-    font-size: 0.78rem;
-    letter-spacing: 0.08em;
-    text-transform: uppercase;
-    cursor: pointer;
-    background: transparent;
-    color: var(--text-light);
-    font-family: 'DM Sans', sans-serif;
-    font-weight: 500;
-    transition: all 0.2s;
+    padding: 0.45rem 1.1rem; border-radius: 50px; border: 1px solid rgba(91,62,126,0.25);
+    font-size: 0.78rem; letter-spacing: 0.08em; text-transform: uppercase;
+    cursor: pointer; background: transparent; color: var(--text-light);
+    font-family: 'DM Sans', sans-serif; font-weight: 500; transition: all 0.2s;
   }
-
-  .gallery-filter.active,
-  .gallery-filter:hover {
-    background: var(--purple);
-    color: white;
-    border-color: var(--purple);
-  }
-
-  .gallery-grid {
-    display: grid;
-    grid-template-columns: repeat(3, 1fr);
-    grid-template-rows: auto;
-    gap: 0.875rem;
-  }
-
+  .gallery-filter.active, .gallery-filter:hover { background: var(--purple); color: white; border-color: var(--purple); }
+  .gallery-grid { display: grid; grid-template-columns: repeat(3,1fr); gap: 0.875rem; }
   .gallery-item {
-    border-radius: 14px;
-    overflow: hidden;
-    aspect-ratio: 1;
+    border-radius: 14px; overflow: hidden; aspect-ratio: 1;
     background: linear-gradient(135deg, var(--purple-pale), white);
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    flex-direction: column;
-    text-align: center;
-    padding: 1rem;
-    cursor: pointer;
-    transition: transform 0.2s, box-shadow 0.2s;
-    border: 1px solid rgba(201,168,76,0.15);
-    position: relative;
-    overflow: hidden;
+    display: flex; align-items: center; justify-content: center;
+    flex-direction: column; text-align: center; padding: 1rem;
+    cursor: pointer; transition: transform 0.2s, box-shadow 0.2s;
+    border: 1px solid rgba(201,168,76,0.15); position: relative;
   }
-
-  .gallery-item:first-child {
-    grid-row: span 2;
-    grid-column: span 1;
-    aspect-ratio: auto;
-  }
-
-  .gallery-item:hover {
-    transform: scale(1.02);
-    box-shadow: 0 8px 30px rgba(91,62,126,0.2);
-    z-index: 1;
-  }
-
-  .gallery-item img {
-    width: 100%; height: 100%;
-    object-fit: cover;
-    position: absolute;
-    inset: 0;
-  }
-
+  .gallery-item:first-child { grid-row: span 2; grid-column: span 1; aspect-ratio: auto; }
+  .gallery-item:hover { transform: scale(1.02); box-shadow: 0 8px 30px rgba(91,62,126,0.2); z-index: 1; }
   .gallery-placeholder-icon { font-size: 2.5rem; margin-bottom: 0.5rem; }
-  .gallery-placeholder-label {
-    font-size: 0.75rem;
-    letter-spacing: 0.12em;
-    text-transform: uppercase;
-    color: var(--purple-light);
-    font-weight: 500;
-  }
-
-  .gallery-placeholder-sub {
-    font-size: 0.72rem;
-    color: var(--gold);
-    margin-top: 0.3rem;
-    font-style: italic;
-  }
-
-  .gallery-upload-note {
-    text-align: center;
-    margin-top: 1.5rem;
-    padding: 1rem;
-    border: 1px dashed rgba(201,168,76,0.4);
-    border-radius: 12px;
-    color: var(--text-light);
-    font-size: 0.85rem;
-  }
+  .gallery-placeholder-label { font-size: 0.75rem; letter-spacing: 0.12em; text-transform: uppercase; color: var(--purple-light); font-weight: 500; }
+  .gallery-placeholder-sub { font-size: 0.72rem; color: var(--gold); margin-top: 0.3rem; font-style: italic; }
+  .gallery-upload-note { text-align: center; margin-top: 1.5rem; padding: 1rem; border: 1px dashed rgba(201,168,76,0.4); border-radius: 12px; color: var(--text-light); font-size: 0.85rem; }
 
   /* ── QR CODE ── */
-  #qrcode-section {
-    background: white;
-    text-align: center;
-  }
-
+  #qrcode-section { background: white; text-align: center; }
   .qr-container {
-    display: inline-flex;
-    flex-direction: column;
-    align-items: center;
-    gap: 1.25rem;
-    padding: 2.5rem;
-    background: var(--cream);
-    border-radius: 24px;
-    border: 1px solid rgba(201,168,76,0.25);
-    box-shadow: 0 8px 30px rgba(91,62,126,0.08);
-    margin-top: 1rem;
+    display: inline-flex; flex-direction: column; align-items: center;
+    gap: 1.25rem; padding: 2.5rem; background: var(--cream);
+    border-radius: 24px; border: 1px solid rgba(201,168,76,0.25);
+    box-shadow: 0 8px 30px rgba(91,62,126,0.08); margin-top: 1rem;
   }
-
   #main-qr canvas { border-radius: 8px; }
-
-  .qr-label {
-    font-family: 'Playfair Display', serif;
-    font-size: 0.95rem;
-    color: var(--purple);
-    font-style: italic;
-  }
-
-  .qr-url {
-    font-size: 0.78rem;
-    color: var(--text-light);
-    letter-spacing: 0.05em;
-  }
+  .qr-label { font-family: 'Playfair Display', serif; font-size: 0.95rem; color: var(--purple); font-style: italic; }
+  .qr-url { font-size: 0.78rem; color: var(--text-light); letter-spacing: 0.05em; }
 
   /* ── FOOTER ── */
-  footer {
-    background: var(--dark);
-    color: white;
-    text-align: center;
-    padding: 4rem 1.5rem;
+  footer { background: var(--dark); color: white; text-align: center; padding: 4rem 1.5rem; position: relative; overflow: hidden; }
+  /* faint caratbong pattern in footer */
+  footer::before {
+    content: '🔵🔵🔵🔵🔵🔵🔵🔵🔵🔵🔵🔵🔵🔵🔵🔵🔵🔵🔵🔵';
+    position: absolute; top: 1rem; left: 50%; transform: translateX(-50%);
+    font-size: 0.7rem; letter-spacing: 1.5rem; opacity: 0.04;
+    white-space: nowrap; pointer-events: none;
   }
-
   .footer-flourish {
     font-family: 'Playfair Display', serif;
-    font-size: clamp(1.3rem, 4vw, 2rem);
+    font-size: clamp(1.3rem,4vw,2rem); font-style: italic;
+    color: var(--gold-light); line-height: 1.4; margin-bottom: 1.5rem;
+    max-width: 600px; margin-left: auto; margin-right: auto;
+  }
+  .footer-divider { width: 60px; height: 1px; background: linear-gradient(90deg, transparent, var(--gold), transparent); margin: 1.5rem auto; }
+  .footer-sub { font-size: 0.8rem; color: rgba(255,255,255,0.3); letter-spacing: 0.1em; text-transform: uppercase; }
+  /* subtle "Carat" dedication line */
+  .footer-carat {
+    margin-top: 1rem; font-size: 0.72rem;
+    color: rgba(168,200,232,0.25); letter-spacing: 0.12em;
     font-style: italic;
-    color: var(--gold-light);
-    line-height: 1.4;
-    margin-bottom: 1.5rem;
-    max-width: 600px;
-    margin-left: auto;
-    margin-right: auto;
   }
 
-  .footer-divider {
-    width: 60px; height: 1px;
-    background: linear-gradient(90deg, transparent, var(--gold), transparent);
-    margin: 1.5rem auto;
-  }
-
-  .footer-sub {
-    font-size: 0.8rem;
-    color: rgba(255,255,255,0.3);
-    letter-spacing: 0.1em;
-    text-transform: uppercase;
-  }
-
-  /* ── MOBILE MENU ── */
+  /* ── MOBILE ── */
   @media (max-width: 768px) {
     .hamburger { display: flex; }
-
     .nav-links {
-      position: fixed;
-      top: 60px; left: 0; right: 0;
+      position: fixed; top: 60px; left: 0; right: 0;
       background: rgba(253,248,240,0.98);
-      flex-direction: column;
-      gap: 0;
-      padding: 1rem 0;
-      transform: translateY(-100%);
-      opacity: 0;
-      pointer-events: none;
-      transition: all 0.3s;
-      box-shadow: 0 8px 20px rgba(0,0,0,0.1);
-      z-index: 999;
+      flex-direction: column; gap: 0; padding: 1rem 0;
+      transform: translateY(-100%); opacity: 0; pointer-events: none;
+      transition: all 0.3s; box-shadow: 0 8px 20px rgba(0,0,0,0.1); z-index: 999;
     }
-
-    .nav-links.open {
-      transform: translateY(0);
-      opacity: 1;
-      pointer-events: all;
-    }
-
+    .nav-links.open { transform: translateY(0); opacity: 1; pointer-events: all; }
     .nav-links li { width: 100%; }
-    .nav-links a {
-      display: block;
-      padding: 0.85rem 1.5rem;
-      font-size: 0.85rem;
-      border-bottom: 1px solid rgba(201,168,76,0.1);
-    }
-
+    .nav-links a { display: block; padding: 0.85rem 1.5rem; font-size: 0.85rem; border-bottom: 1px solid rgba(201,168,76,0.1); }
     .form-grid { grid-template-columns: 1fr; }
     .details-grid { grid-template-columns: 1fr; }
-    .gallery-grid { grid-template-columns: repeat(2, 1fr); }
+    .gallery-grid { grid-template-columns: repeat(2,1fr); }
     .gallery-item:first-child { grid-column: span 2; }
-
     .countdown-sep { display: none; }
     .countdown-grid { gap: 1rem; }
-
     .rsvp-form { padding: 1.5rem; }
     .memory-form { padding: 1.5rem; }
+    .svt-char-name { display: none; }
   }
-
   @media (max-width: 480px) {
-    .gallery-grid { grid-template-columns: repeat(2, 1fr); }
+    .gallery-grid { grid-template-columns: repeat(2,1fr); }
     .hero-cta { flex-direction: column; align-items: center; }
     .btn-primary, .btn-ghost { width: 100%; max-width: 280px; text-align: center; }
     .gift-cards { grid-template-columns: 1fr; }
   }
 
-  /* Animate on scroll */
-  .fade-in-on-scroll {
-    opacity: 0;
-    transform: translateY(30px);
-    transition: opacity 0.6s ease, transform 0.6s ease;
-  }
-  .fade-in-on-scroll.visible {
-    opacity: 1;
-    transform: translateY(0);
-  }
+  .fade-in-on-scroll { opacity: 0; transform: translateY(30px); transition: opacity 0.6s ease, transform 0.6s ease; }
+  .fade-in-on-scroll.visible { opacity: 1; transform: translateY(0); }
 </style>
 </head>
 <body>
 
 <!-- NAV -->
 <nav>
-  <div class="nav-logo">Tiffany's 40th ✨</div>
+  <div class="nav-logo"><span class="cb">🔵</span> Tiffany's 40th</div>
   <ul class="nav-links" id="navLinks">
-    <li><a href="#details" onclick="closeMenu()">Details</a></li>
-    <li><a href="#gifts" onclick="closeMenu()">Gifts</a></li>
-    <li><a href="#rsvp" onclick="closeMenu()">RSVP</a></li>
-    <li><a href="#memories" onclick="closeMenu()">Memories</a></li>
-    <li><a href="#gallery" onclick="closeMenu()">Gallery</a></li>
+    <li><a href="#details"   onclick="closeMenu()">Details</a></li>
+    <li><a href="#gifts"     onclick="closeMenu()">Gifts</a></li>
+    <li><a href="#rsvp"      onclick="closeMenu()">RSVP</a></li>
+    <li><a href="#memories"  onclick="closeMenu()">Memories</a></li>
+    <li><a href="#gallery"   onclick="closeMenu()">Gallery</a></li>
   </ul>
   <div class="hamburger" id="hamburger" onclick="toggleMenu()" aria-label="Menu">
     <span></span><span></span><span></span>
@@ -1092,6 +530,11 @@
 
 <!-- HERO -->
 <section class="hero" id="home">
+  <!-- Caratbong-inspired soft glow orbs -->
+  <div class="svt-orb" style="width:300px;height:300px;top:-50px;left:-80px;animation-duration:7s;"></div>
+  <div class="svt-orb" style="width:200px;height:200px;bottom:80px;right:-40px;animation-duration:9s;animation-delay:2s;"></div>
+  <div class="svt-orb" style="width:150px;height:150px;top:40%;left:70%;animation-duration:6s;animation-delay:1s;"></div>
+
   <div class="confetti-field" id="confetti"></div>
 
   <span class="hero-eyebrow">🎉 You're Invited · June 28th, 2025</span>
@@ -1100,26 +543,25 @@
     <span>40th</span>
   </h1>
   <p class="hero-tagline">Cheers to 40 Years!</p>
+  <!-- Easter egg: "Going Seventeen" vibe, only a carat would smile at this -->
+  <p class="hero-svt-hint">✦ make your day · feel the energy · be the sun ✦</p>
   <div class="hero-divider"></div>
-
   <div class="hero-details">
-    <div class="hero-detail-item"><span class="icon"></span> Backyard BBQ Celebration</div>
+    <div class="hero-detail-item"><span class="icon">🍖</span> Backyard BBQ Celebration</div>
     <div class="hero-detail-item"><span class="icon">📅</span> Sunday, June 28th</div>
     <div class="hero-detail-item"><span class="icon">⏰</span> 4:30 – 7:30 PM</div>
     <div class="hero-detail-item"><span class="icon">📍</span> Rockville, MD</div>
   </div>
-
   <div class="hero-cta">
     <a href="#rsvp" class="btn-primary">RSVP Now</a>
     <a href="#details" class="btn-ghost">View Details</a>
   </div>
-
   <div class="scroll-hint">scroll</div>
 </section>
 
 <!-- COUNTDOWN -->
 <section id="countdown">
-  <div class="section-inner" style="text-align:center;">
+  <div class="section-inner">
     <span class="section-label">The Big Day</span>
     <h2 class="section-title">Counting Down to 40!</h2>
     <p class="countdown-subtitle">Join us as we celebrate Tiffany's milestone birthday</p>
@@ -1153,38 +595,24 @@
     <span class="section-label">Event Details</span>
     <h2 class="section-title">Join the Celebration</h2>
     <div class="section-divider"></div>
-
     <div class="details-grid fade-in-on-scroll">
       <div class="detail-card">
         <div class="detail-icon">📅</div>
-        <div>
-          <h3>Date</h3>
-          <p><strong>Sunday, June 28th</strong></p>
-        </div>
+        <div><h3>Date</h3><p><strong>Sunday, June 28th</strong></p></div>
       </div>
       <div class="detail-card">
         <div class="detail-icon">⏰</div>
-        <div>
-          <h3>Time</h3>
-          <p><strong>4:30 – 7:30 PM</strong><br><small>Come by when you can!</small></p>
-        </div>
+        <div><h3>Time</h3><p><strong>4:30 – 7:30 PM</strong><br><small>Come by when you can!</small></p></div>
       </div>
       <div class="detail-card">
         <div class="detail-icon">📍</div>
-        <div>
-          <h3>Location</h3>
-          <p><strong>17712 Cliffbourne Lane</strong><br>Rockville, MD 20855</p>
-        </div>
+        <div><h3>Location</h3><p><strong>17712 Cliffbourne Lane</strong><br>Rockville, MD 20855</p></div>
       </div>
       <div class="detail-card">
         <div class="detail-icon">🍽️</div>
-        <div>
-          <h3>Menu</h3>
-          <p>Food, drinks &amp; cake provided</p>
-        </div>
+        <div><h3>Menu</h3><p>Food, drinks &amp; cake provided</p></div>
       </div>
     </div>
-
     <div class="detail-note fade-in-on-scroll">
       Come by when you can, stay as long as you'd like — it will be wonderful to celebrate together!
       Please RSVP by <strong>June 21st</strong> to help with food planning. 💜
@@ -1192,66 +620,217 @@
   </div>
 </section>
 
-<!-- GIFTS / REGISTRY -->
+<!-- GIFTS -->
 <section id="gifts">
   <div class="section-inner">
     <span class="section-label">Gift Ideas</span>
     <h2 class="section-title">Show Some Love</h2>
     <div class="section-divider"></div>
-
     <div class="gift-note-box fade-in-on-scroll">
       ✨ Tiffany will be settling into a new home with a patio in Virginia Beach. Gift cards toward
       patio furniture or housewarming needs would be greatly appreciated — but your presence
       at her celebration is truly the greatest gift of all!
     </div>
-
     <div class="gift-cards fade-in-on-scroll">
-
       <div class="gift-card">
         <div class="gift-card-icon">🛋️</div>
         <h3>Patio Furniture Fund</h3>
         <p>Help Tiffany create her dream outdoor space at her new Virginia Beach home.</p>
-        <div class="fund-bar-wrap">
-          <div class="fund-bar" id="bar1" style="width:0%" data-target="62"></div>
-        </div>
-        <div class="fund-amounts">
-          <span id="raised1">$0 raised</span>
-          <span>Goal: $500</span>
-        </div>
-        <a href="https://venmo.com/" target="_blank" class="venmo-btn" onclick="updateFund(1, 50)">
+        <a href="https://venmo.com/u/TiffTaylor" target="_blank" class="venmo-btn">
           <div class="venmo-icon">V</div>
           Contribute via Venmo
         </a>
       </div>
-
       <div class="gift-card">
         <div class="gift-card-icon">🏡</div>
         <h3>Housewarming Essentials</h3>
         <p>Contribute toward home décor, kitchen items, or whatever she needs for her new beginning.</p>
-        <div class="fund-bar-wrap">
-          <div class="fund-bar" id="bar2" style="width:0%" data-target="45"></div>
-        </div>
-        <div class="fund-amounts">
-          <span id="raised2">$0 raised</span>
-          <span>Goal: $300</span>
-        </div>
-        <a href="https://venmo.com/" target="_blank" class="venmo-btn" onclick="updateFund(2, 30)">
+        <a href="https://venmo.com/u/TiffTaylor" target="_blank" class="venmo-btn">
           <div class="venmo-icon">V</div>
           Contribute via Venmo
         </a>
       </div>
-      
-    <div class="gift-qr-section fade-in-on-scroll">
-      <h3>Scan to Contribute</h3>
-      <p>Point your camera at the QR code to open Venmo</p>
-      <canvas id="venmo-qr"></canvas>
-      <p style="margin-top:1rem; font-size:0.8rem; color:var(--text-light);">
-        <em>Replace "TiffanyVenmoHandlee" below in the code with Tiffany's actual Venmo username</em>
-      </p>
     </div>
-
+    <div class="gift-qr-section fade-in-on-scroll">
+      <h3>Scan to Contribute on Venmo</h3>
+      <p>Point your camera at this QR code to open Venmo for @TiffTaylor</p>
+      <canvas id="venmo-qr"></canvas>
+    </div>
   </div>
 </section>
+
+<!-- SVT CHARACTER STRIP – subtle Seventeen / Caratbong easter egg -->
+<div class="svt-strip">
+  <div class="svt-characters" aria-hidden="true">
+    <!-- 13 cute mini character blobs, one per SVT member color palette -->
+    <!-- S.Coups -->
+    <div class="svt-char" style="animation-duration:3.1s;animation-delay:0s;">
+      <svg viewBox="0 0 60 60" fill="none" xmlns="http://www.w3.org/2000/svg">
+        <ellipse cx="30" cy="32" rx="18" ry="20" fill="#8B6BB1"/>
+        <circle cx="30" cy="22" r="13" fill="#A07CC5"/>
+        <circle cx="25" cy="21" r="2.5" fill="#2D1845"/>
+        <circle cx="35" cy="21" r="2.5" fill="#2D1845"/>
+        <path d="M25 27 Q30 31 35 27" stroke="#2D1845" stroke-width="1.5" stroke-linecap="round" fill="none"/>
+        <!-- tiny caratbong highlight on head -->
+        <circle cx="36" cy="16" r="2" fill="rgba(168,200,232,0.5)"/>
+      </svg>
+      <span class="svt-char-name">S.Coups</span>
+    </div>
+    <!-- Jeonghan -->
+    <div class="svt-char" style="animation-duration:3.8s;animation-delay:0.3s;">
+      <svg viewBox="0 0 60 60" fill="none" xmlns="http://www.w3.org/2000/svg">
+        <ellipse cx="30" cy="32" rx="17" ry="19" fill="#C9A84C"/>
+        <circle cx="30" cy="22" r="13" fill="#E8C97A"/>
+        <circle cx="25" cy="21" r="2.5" fill="#2D1845"/>
+        <circle cx="35" cy="21" r="2.5" fill="#2D1845"/>
+        <path d="M25 27 Q30 32 35 27" stroke="#2D1845" stroke-width="1.5" stroke-linecap="round" fill="none"/>
+        <circle cx="37" cy="15" r="2" fill="rgba(168,200,232,0.6)"/>
+      </svg>
+      <span class="svt-char-name">Jeonghan</span>
+    </div>
+    <!-- Joshua -->
+    <div class="svt-char" style="animation-duration:4.2s;animation-delay:0.6s;">
+      <svg viewBox="0 0 60 60" fill="none" xmlns="http://www.w3.org/2000/svg">
+        <ellipse cx="30" cy="32" rx="17" ry="19" fill="#7BA6C9"/>
+        <circle cx="30" cy="22" r="13" fill="#A8C8E8"/>
+        <circle cx="25" cy="21" r="2.5" fill="#2D1845"/>
+        <circle cx="35" cy="21" r="2.5" fill="#2D1845"/>
+        <path d="M26 27 Q30 30 34 27" stroke="#2D1845" stroke-width="1.5" stroke-linecap="round" fill="none"/>
+        <circle cx="36" cy="16" r="2" fill="rgba(255,255,255,0.7)"/>
+      </svg>
+      <span class="svt-char-name">Joshua</span>
+    </div>
+    <!-- Jun -->
+    <div class="svt-char" style="animation-duration:3.5s;animation-delay:0.9s;">
+      <svg viewBox="0 0 60 60" fill="none" xmlns="http://www.w3.org/2000/svg">
+        <ellipse cx="30" cy="32" rx="17" ry="19" fill="#C97A8B"/>
+        <circle cx="30" cy="22" r="13" fill="#E8A8B8"/>
+        <circle cx="25" cy="21" r="2.5" fill="#2D1845"/>
+        <circle cx="35" cy="21" r="2.5" fill="#2D1845"/>
+        <path d="M25 27 Q30 32 35 27" stroke="#2D1845" stroke-width="1.5" stroke-linecap="round" fill="none"/>
+        <circle cx="37" cy="15" r="2" fill="rgba(168,200,232,0.5)"/>
+      </svg>
+      <span class="svt-char-name">Jun</span>
+    </div>
+    <!-- Hoshi -->
+    <div class="svt-char" style="animation-duration:2.9s;animation-delay:0.4s;">
+      <svg viewBox="0 0 60 60" fill="none" xmlns="http://www.w3.org/2000/svg">
+        <ellipse cx="30" cy="32" rx="18" ry="20" fill="#C9A04C"/>
+        <circle cx="30" cy="22" r="13" fill="#E8C070"/>
+        <circle cx="25" cy="21" r="2.5" fill="#2D1845"/>
+        <circle cx="35" cy="21" r="2.5" fill="#2D1845"/>
+        <!-- big grin for Hoshi -->
+        <path d="M23 27 Q30 34 37 27" stroke="#2D1845" stroke-width="1.8" stroke-linecap="round" fill="none"/>
+        <circle cx="36" cy="15" r="2.5" fill="rgba(255,220,50,0.6)"/>
+      </svg>
+      <span class="svt-char-name">Hoshi</span>
+    </div>
+    <!-- Wonwoo -->
+    <div class="svt-char" style="animation-duration:4.5s;animation-delay:1.2s;">
+      <svg viewBox="0 0 60 60" fill="none" xmlns="http://www.w3.org/2000/svg">
+        <ellipse cx="30" cy="32" rx="17" ry="19" fill="#5B7E9E"/>
+        <circle cx="30" cy="22" r="13" fill="#7BA0BF"/>
+        <circle cx="25" cy="21" r="2.5" fill="#2D1845"/>
+        <circle cx="35" cy="21" r="2.5" fill="#2D1845"/>
+        <path d="M26 28 Q30 30 34 28" stroke="#2D1845" stroke-width="1.5" stroke-linecap="round" fill="none"/>
+        <circle cx="36" cy="16" r="2" fill="rgba(168,200,232,0.6)"/>
+      </svg>
+      <span class="svt-char-name">Wonwoo</span>
+    </div>
+    <!-- Woozi -->
+    <div class="svt-char" style="animation-duration:3.3s;animation-delay:0.7s;">
+      <svg viewBox="0 0 60 60" fill="none" xmlns="http://www.w3.org/2000/svg">
+        <ellipse cx="30" cy="32" rx="16" ry="18" fill="#A86BB1"/>
+        <circle cx="30" cy="21" r="12" fill="#C98ED4"/>
+        <circle cx="25" cy="21" r="2.5" fill="#2D1845"/>
+        <circle cx="35" cy="21" r="2.5" fill="#2D1845"/>
+        <path d="M26 27 Q30 31 34 27" stroke="#2D1845" stroke-width="1.5" stroke-linecap="round" fill="none"/>
+        <circle cx="37" cy="15" r="2" fill="rgba(168,200,232,0.55)"/>
+      </svg>
+      <span class="svt-char-name">Woozi</span>
+    </div>
+    <!-- DK -->
+    <div class="svt-char" style="animation-duration:2.7s;animation-delay:0.2s;">
+      <svg viewBox="0 0 60 60" fill="none" xmlns="http://www.w3.org/2000/svg">
+        <ellipse cx="30" cy="32" rx="18" ry="20" fill="#E8A84C"/>
+        <circle cx="30" cy="22" r="13" fill="#F5C870"/>
+        <circle cx="25" cy="21" r="2.5" fill="#2D1845"/>
+        <circle cx="35" cy="21" r="2.5" fill="#2D1845"/>
+        <!-- big happy DK smile -->
+        <path d="M23 27 Q30 35 37 27" stroke="#2D1845" stroke-width="1.8" stroke-linecap="round" fill="none"/>
+        <circle cx="36" cy="15" r="2.5" fill="rgba(255,220,100,0.7)"/>
+      </svg>
+      <span class="svt-char-name">DK</span>
+    </div>
+    <!-- Mingyu -->
+    <div class="svt-char" style="animation-duration:4.0s;animation-delay:1.0s;">
+      <svg viewBox="0 0 60 60" fill="none" xmlns="http://www.w3.org/2000/svg">
+        <ellipse cx="30" cy="33" rx="19" ry="21" fill="#8BAF6B"/>
+        <circle cx="30" cy="22" r="14" fill="#A8C98A"/>
+        <circle cx="25" cy="21" r="2.5" fill="#2D1845"/>
+        <circle cx="35" cy="21" r="2.5" fill="#2D1845"/>
+        <path d="M25 27 Q30 32 35 27" stroke="#2D1845" stroke-width="1.5" stroke-linecap="round" fill="none"/>
+        <circle cx="37" cy="15" r="2" fill="rgba(168,200,232,0.5)"/>
+      </svg>
+      <span class="svt-char-name">Mingyu</span>
+    </div>
+    <!-- The8 -->
+    <div class="svt-char" style="animation-duration:3.6s;animation-delay:0.5s;">
+      <svg viewBox="0 0 60 60" fill="none" xmlns="http://www.w3.org/2000/svg">
+        <ellipse cx="30" cy="32" rx="17" ry="19" fill="#C96B8B"/>
+        <circle cx="30" cy="22" r="13" fill="#E08FAA"/>
+        <circle cx="25" cy="21" r="2.5" fill="#2D1845"/>
+        <circle cx="35" cy="21" r="2.5" fill="#2D1845"/>
+        <path d="M26 27 Q30 31 34 27" stroke="#2D1845" stroke-width="1.5" stroke-linecap="round" fill="none"/>
+        <circle cx="36" cy="16" r="2" fill="rgba(168,200,232,0.55)"/>
+      </svg>
+      <span class="svt-char-name">The8</span>
+    </div>
+    <!-- Seungkwan -->
+    <div class="svt-char" style="animation-duration:2.8s;animation-delay:0.8s;">
+      <svg viewBox="0 0 60 60" fill="none" xmlns="http://www.w3.org/2000/svg">
+        <ellipse cx="30" cy="32" rx="18" ry="20" fill="#6B9EC9"/>
+        <circle cx="30" cy="22" r="13" fill="#90BDE0"/>
+        <circle cx="25" cy="21" r="2.5" fill="#2D1845"/>
+        <circle cx="35" cy="21" r="2.5" fill="#2D1845"/>
+        <!-- Seungkwan energetic grin -->
+        <path d="M23 27 Q30 34 37 27" stroke="#2D1845" stroke-width="1.8" stroke-linecap="round" fill="none"/>
+        <circle cx="36" cy="15" r="2.5" fill="rgba(168,200,232,0.7)"/>
+      </svg>
+      <span class="svt-char-name">Seungkwan</span>
+    </div>
+    <!-- Vernon -->
+    <div class="svt-char" style="animation-duration:4.3s;animation-delay:1.1s;">
+      <svg viewBox="0 0 60 60" fill="none" xmlns="http://www.w3.org/2000/svg">
+        <ellipse cx="30" cy="32" rx="17" ry="19" fill="#9E8BC9"/>
+        <circle cx="30" cy="22" r="13" fill="#BBA8E0"/>
+        <circle cx="25" cy="21" r="2.5" fill="#2D1845"/>
+        <circle cx="35" cy="21" r="2.5" fill="#2D1845"/>
+        <path d="M26 27 Q30 30 34 27" stroke="#2D1845" stroke-width="1.5" stroke-linecap="round" fill="none"/>
+        <circle cx="37" cy="15" r="2" fill="rgba(168,200,232,0.6)"/>
+      </svg>
+      <span class="svt-char-name">Vernon</span>
+    </div>
+    <!-- Dino -->
+    <div class="svt-char" style="animation-duration:3.0s;animation-delay:0.1s;">
+      <svg viewBox="0 0 60 60" fill="none" xmlns="http://www.w3.org/2000/svg">
+        <ellipse cx="30" cy="32" rx="17" ry="19" fill="#7AC9A8"/>
+        <circle cx="30" cy="22" r="13" fill="#9AE0C4"/>
+        <circle cx="25" cy="21" r="2.5" fill="#2D1845"/>
+        <circle cx="35" cy="21" r="2.5" fill="#2D1845"/>
+        <!-- Dino big smile -->
+        <path d="M23 27 Q30 34 37 27" stroke="#2D1845" stroke-width="1.8" stroke-linecap="round" fill="none"/>
+        <circle cx="36" cy="15" r="2.5" fill="rgba(168,200,232,0.65)"/>
+      </svg>
+      <span class="svt-char-name">Dino</span>
+    </div>
+  </div>
+  <p class="svt-caption">
+    <span class="cb-icon">🔵</span>
+    Sending all the light and energy your way — Happy 40th, Carat!
+    <span class="cb-icon">🔵</span>
+  </p>
+</div>
 
 <!-- RSVP -->
 <section id="rsvp">
@@ -1286,15 +865,13 @@
         </div>
         <div class="form-group full">
           <label>Favorite Memory of Tiffany 💜</label>
-          <textarea id="rsvp-memory" placeholder="My favorite memory of Tiffany is…"></textarea>
+          <textarea id="rsvp-memory" placeholder="My favorite Tiffany memory is…"></textarea>
         </div>
       </div>
       <div class="form-submit-row">
         <button class="btn-submit" id="rsvpBtn" onclick="submitRSVP()">RSVP Now ✨</button>
       </div>
-      <p class="rsvp-disclaimer">
-        Responses will be collected to help with party planning. RSVP by June 21st!
-      </p>
+      <p class="rsvp-disclaimer">Please RSVP by June 21st to help with food planning!</p>
     </div>
 
     <div id="rsvpSuccess" style="display:none;" class="form-success">
@@ -1302,7 +879,6 @@
       <h3>You're on the list!</h3>
       <p>Thanks for RSVPing! We can't wait to celebrate Tiffany's 40th with you.<br>See you June 28th!</p>
     </div>
-
   </div>
 </section>
 
@@ -1312,21 +888,17 @@
     <span class="section-label">Memory Wall</span>
     <h2 class="section-title">Share a Memory</h2>
     <div class="section-divider"></div>
-
     <p class="memory-intro">
       Every great friendship holds a treasury of moments. Share yours — a funny story,
       a quiet memory, or simply what Tiffany means to you.
     </p>
-
     <div class="memory-grid" id="memoryGrid">
-      <!-- Pre-seeded memories -->
       <div class="memory-card">
         <p class="memory-text">My favorite Tiffany memory is her laugh — it fills any room and makes everything feel lighter. There's nobody quite like her!</p>
         <div class="memory-author">— The Celebration Team</div>
         <div class="memory-date">Kickstarting the wall ✨</div>
       </div>
     </div>
-
     <div class="memory-form fade-in-on-scroll">
       <h3>Leave Your Message</h3>
       <div class="memory-form-inner">
@@ -1337,7 +909,6 @@
         </button>
       </div>
     </div>
-
   </div>
 </section>
 
@@ -1347,20 +918,17 @@
     <span class="section-label">Photo Gallery</span>
     <h2 class="section-title">Through the Years</h2>
     <div class="section-divider"></div>
-
     <p class="gallery-intro">
       A life beautifully lived, captured in moments. From childhood adventures to lifelong friendships —
       forty years of joy, laughter, and love.
     </p>
-
     <div class="gallery-categories">
-      <button class="gallery-filter active" onclick="filterGallery('all', this)">All</button>
-      <button class="gallery-filter" onclick="filterGallery('childhood', this)">Childhood</button>
-      <button class="gallery-filter" onclick="filterGallery('family', this)">Family</button>
-      <button class="gallery-filter" onclick="filterGallery('friends', this)">Friends</button>
-      <button class="gallery-filter" onclick="filterGallery('moments', this)">Moments</button>
+      <button class="gallery-filter active" onclick="filterGallery('all',this)">All</button>
+      <button class="gallery-filter" onclick="filterGallery('childhood',this)">Childhood</button>
+      <button class="gallery-filter" onclick="filterGallery('family',this)">Family</button>
+      <button class="gallery-filter" onclick="filterGallery('friends',this)">Friends</button>
+      <button class="gallery-filter" onclick="filterGallery('moments',this)">Moments</button>
     </div>
-
     <div class="gallery-grid" id="galleryGrid">
       <div class="gallery-item" data-category="childhood">
         <div class="gallery-placeholder-icon">👶</div>
@@ -1398,9 +966,8 @@
         <div class="gallery-placeholder-sub">Add a photo</div>
       </div>
     </div>
-
     <div class="gallery-upload-note">
-      📸 To add real photos, replace the placeholder &lt;div&gt; elements with &lt;img&gt; tags pointing to your images,
+      📸 To add real photos, replace the placeholder elements with &lt;img&gt; tags pointing to your images,
       or use a free image host like <strong>Imgur</strong> or <strong>Google Photos</strong> share links.
     </div>
   </div>
@@ -1413,16 +980,13 @@
     <h2 class="section-title">Scan &amp; Share</h2>
     <div class="section-divider" style="margin: 0 auto 1rem;"></div>
     <p style="color:var(--text-light); margin-bottom:1.5rem; max-width:500px; margin-left:auto; margin-right:auto;">
-      Print or text this QR code on your invitation so guests can RSVP and see all the details instantly from their phone.
+      Print or text this QR code so guests can RSVP and see all the details instantly from their phone.
     </p>
     <div class="qr-container">
       <canvas id="main-qr"></canvas>
       <div class="qr-label">Tiffany's 40th Birthday</div>
-      <div class="qr-url" id="qr-url-label">yoursite.github.io</div>
+      <div class="qr-url">tiffany-40.github.io/birthday</div>
     </div>
-    <p style="margin-top:1.5rem; font-size:0.8rem; color:var(--text-light);">
-      <em>After uploading to GitHub Pages, update the URL in the script below to generate your actual QR code.</em>
-    </p>
   </div>
 </section>
 
@@ -1433,143 +997,86 @@
   </div>
   <div class="footer-divider"></div>
   <p class="footer-sub">Celebrating Tiffany · June 28, 2025 · Rockville, MD</p>
-  <p style="margin-top:0.75rem; font-size:0.72rem; color:rgba(255,255,255,0.2);">
-    Made with 💜 &amp; ✨ for a very special 40th
-  </p>
+  <!-- Carat easter egg: a nod only SVT fans would catch -->
+  <p class="footer-carat">✦ &nbsp; Going Seventeen into the next chapter &nbsp; ✦</p>
+  <p style="margin-top:0.75rem; font-size:0.72rem; color:rgba(255,255,255,0.15);">Made with 💜 &amp; 🔵 for a very special 40th</p>
 </footer>
 
-<!-- ───────────── SCRIPTS ───────────── -->
+<!-- ─────────── SCRIPTS ─────────── -->
 <script>
 /* ── CONFETTI ── */
-(function spawnConfetti() {
+(function() {
   const field = document.getElementById('confetti');
-  const colors = ['#C9A84C','#E8C97A','#7B5BA6','#A88EC7','#F5E6B8','#fff'];
+  const colors = ['#C9A84C','#E8C97A','#7B5BA6','#A88EC7','#F5E6B8','#A8C8E8','#fff'];
   for (let i = 0; i < 40; i++) {
     const p = document.createElement('div');
     p.className = 'confetti-piece';
     p.style.cssText = `
-      left: ${Math.random()*100}%;
-      width: ${3 + Math.random()*6}px;
-      height: ${3 + Math.random()*6}px;
-      background: ${colors[Math.floor(Math.random()*colors.length)]};
-      animation-duration: ${6 + Math.random()*8}s;
-      animation-delay: ${Math.random()*8}s;
-      border-radius: ${Math.random() > 0.5 ? '50%' : '2px'};
+      left:${Math.random()*100}%;
+      width:${3+Math.random()*6}px; height:${3+Math.random()*6}px;
+      background:${colors[Math.floor(Math.random()*colors.length)]};
+      animation-duration:${6+Math.random()*8}s;
+      animation-delay:${Math.random()*8}s;
+      border-radius:${Math.random()>0.5?'50%':'2px'};
     `;
     field.appendChild(p);
   }
 })();
 
 /* ── NAV ── */
-function toggleMenu() {
-  document.getElementById('navLinks').classList.toggle('open');
-}
-function closeMenu() {
-  document.getElementById('navLinks').classList.remove('open');
-}
+function toggleMenu() { document.getElementById('navLinks').classList.toggle('open'); }
+function closeMenu()  { document.getElementById('navLinks').classList.remove('open'); }
 
 /* ── COUNTDOWN ── */
-(function startCountdown() {
+(function() {
   const target = new Date('2025-06-28T16:30:00');
   function tick() {
-    const now = new Date();
-    const diff = target - now;
+    const diff = target - new Date();
     if (diff <= 0) {
-      document.querySelector('#countdown .section-title').textContent = '🎉 It\'s Tiffany\'s 40th!';
+      document.querySelector('#countdown .section-title').textContent = "🎉 It's Tiffany's 40th!";
       document.querySelector('.countdown-subtitle').textContent = 'The party is happening RIGHT NOW!';
       ['cd-days','cd-hours','cd-mins','cd-secs'].forEach(id => document.getElementById(id).textContent = '00');
       return;
     }
-    const d = Math.floor(diff / 86400000);
-    const h = Math.floor((diff % 86400000) / 3600000);
-    const m = Math.floor((diff % 3600000) / 60000);
-    const s = Math.floor((diff % 60000) / 1000);
+    const d = Math.floor(diff/86400000);
+    const h = Math.floor((diff%86400000)/3600000);
+    const m = Math.floor((diff%3600000)/60000);
+    const s = Math.floor((diff%60000)/1000);
     document.getElementById('cd-days').textContent  = String(d).padStart(2,'0');
     document.getElementById('cd-hours').textContent = String(h).padStart(2,'0');
     document.getElementById('cd-mins').textContent  = String(m).padStart(2,'0');
     document.getElementById('cd-secs').textContent  = String(s).padStart(2,'0');
   }
-  tick();
-  setInterval(tick, 1000);
+  tick(); setInterval(tick, 1000);
 })();
 
-/* ── FUND BARS ── */
-const fundData = {
-  1: { raised: 310, goal: 500, label: 'raised1' },
-  2: { raised: 135, goal: 300, label: 'raised2' },
-  3: { raised: 60,  goal: 200, label: 'raised3' },
-};
+/* ── RSVP → GOOGLE SHEETS ── */
+const GOOGLE_SCRIPT_URL = 'https://script.google.com/macros/s/YOUR_DEPLOYMENT_ID_HERE/exec';
+// ↑ Replace with your deployed Apps Script URL after setup (see Apps Script below)
 
-function animateBars() {
-  [1,2,3].forEach(i => {
-    const d = fundData[i];
-    const pct = Math.min(100, Math.round(d.raised / d.goal * 100));
-    setTimeout(() => {
-      document.getElementById('bar'+i).style.width = pct + '%';
-      document.getElementById(d.label).textContent = '$' + d.raised + ' raised';
-    }, 200 + i * 150);
-  });
-}
-
-function updateFund(id, amount) {
-  // Demo: simulate a contribution locally
-  fundData[id].raised = Math.min(fundData[id].raised + amount, fundData[id].goal);
-  animateBars();
-}
-
-/* Trigger bars on scroll */
-let barsAnimated = false;
-const giftsSection = document.getElementById('gifts');
-const observer = new IntersectionObserver(entries => {
-  entries.forEach(e => {
-    if (e.isIntersecting && !barsAnimated) {
-      barsAnimated = true;
-      animateBars();
-    }
-  });
-}, { threshold: 0.2 });
-observer.observe(giftsSection);
-
-/* ── RSVP ── */
 function submitRSVP() {
-  const name = document.getElementById('rsvp-name').value.trim();
-  const guests = document.getElementById('rsvp-guests').value;
+  const name    = document.getElementById('rsvp-name').value.trim();
+  const email   = document.getElementById('rsvp-email').value.trim();
+  const guests  = document.getElementById('rsvp-guests').value;
   const dietary = document.getElementById('rsvp-dietary').value.trim();
-  const memory = document.getElementById('rsvp-memory').value.trim();
+  const memory  = document.getElementById('rsvp-memory').value.trim();
 
-  if (!name) {
-    alert('Please enter your name!');
-    return;
-  }
+  if (!name) { alert('Please enter your name!'); return; }
 
   const btn = document.getElementById('rsvpBtn');
-  btn.disabled = true;
-  btn.textContent = 'Sending…';
+  btn.disabled = true; btn.textContent = 'Sending…';
 
-  /* ── Google Sheets integration ──
-     To enable real submissions:
-     1. Create a Google Sheet
-     2. Go to Extensions → Apps Script
-     3. Paste the doPost(e) web app script (see README)
-     4. Deploy as web app and paste the URL below
-  */
-  const GOOGLE_SCRIPT_URL = ''; // ← Paste your Apps Script URL here
-
-  const payload = { name, guests, dietary, memory, timestamp: new Date().toISOString() };
+  const payload = { name, email, guests, dietary, memory, timestamp: new Date().toISOString() };
 
   const finish = () => {
     document.getElementById('rsvpForm').style.display = 'none';
     document.getElementById('rsvpSuccess').style.display = 'block';
-    // Also add to memory wall if they left a memory
-    if (memory && name) {
-      addMemoryCard(name, memory);
-    }
+    if (memory && name) addMemoryCard(name, memory);
   };
 
-  if (GOOGLE_SCRIPT_URL) {
+  if (GOOGLE_SCRIPT_URL && !GOOGLE_SCRIPT_URL.includes('YOUR_DEPLOYMENT')) {
     fetch(GOOGLE_SCRIPT_URL, {
-      method: 'POST',
-      mode: 'no-cors',
+      method: 'POST', mode: 'no-cors',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify(payload)
     }).then(finish).catch(finish);
@@ -1582,10 +1089,9 @@ function submitRSVP() {
 const memories = JSON.parse(localStorage.getItem('tiffany40_memories') || '[]');
 
 function renderMemories() {
-  const grid = document.getElementById('memoryGrid');
   memories.forEach(m => {
-    const existing = document.getElementById('mem-' + m.id);
-    if (!existing) grid.appendChild(createMemoryCard(m));
+    if (!document.getElementById('mem-'+m.id))
+      document.getElementById('memoryGrid').appendChild(createMemoryCard(m));
   });
 }
 
@@ -1593,19 +1099,18 @@ function createMemoryCard({ name, text, date }) {
   const card = document.createElement('div');
   card.className = 'memory-card';
   card.innerHTML = `
-    <p class="memory-text">${escapeHtml(text)}</p>
-    <div class="memory-author">— ${escapeHtml(name)}</div>
-    <div class="memory-date">${date}</div>
-  `;
+    <p class="memory-text">${esc(text)}</p>
+    <div class="memory-author">— ${esc(name)}</div>
+    <div class="memory-date">${date}</div>`;
   return card;
 }
 
 function addMemoryCard(name, text) {
-  const m = { id: Date.now(), name, text, date: new Date().toLocaleDateString('en-US', { month: 'long', day: 'numeric', year: 'numeric' }) };
+  const m = { id: Date.now(), name, text,
+    date: new Date().toLocaleDateString('en-US',{month:'long',day:'numeric',year:'numeric'}) };
   memories.push(m);
   localStorage.setItem('tiffany40_memories', JSON.stringify(memories));
-  const grid = document.getElementById('memoryGrid');
-  grid.appendChild(createMemoryCard(m));
+  document.getElementById('memoryGrid').appendChild(createMemoryCard(m));
 }
 
 function submitMemory() {
@@ -1618,36 +1123,25 @@ function submitMemory() {
 }
 
 renderMemories();
-
-function escapeHtml(str) {
-  return str.replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');
-}
+function esc(s) { return s.replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;'); }
 
 /* ── GALLERY FILTER ── */
 function filterGallery(cat, btn) {
   document.querySelectorAll('.gallery-filter').forEach(b => b.classList.remove('active'));
   btn.classList.add('active');
   document.querySelectorAll('.gallery-item').forEach(item => {
-    if (cat === 'all' || item.dataset.category === cat) {
-      item.style.display = '';
-    } else {
-      item.style.display = 'none';
-    }
+    item.style.display = (cat==='all'||item.dataset.category===cat) ? '' : 'none';
   });
 }
 
 /* ── QR CODES ── */
 window.addEventListener('load', function() {
-  const siteURL = window.location.href.split('#')[0] || 'https://hoa-ann.github.io/tiffany40';
-  document.getElementById('qr-url-label').textContent = siteURL;
-
-  QRCode.toCanvas(document.getElementById('main-qr'), siteURL, {
+  QRCode.toCanvas(document.getElementById('main-qr'), 'https://tiffany-40.github.io/birthday/', {
     width: 180,
     color: { dark: '#2D1845', light: '#FFFFFF' },
     errorCorrectionLevel: 'H'
   });
-
-  QRCode.toCanvas(document.getElementById('venmo-qr'), 'https://venmo.com/TiffanyVenmoHandle', {
+  QRCode.toCanvas(document.getElementById('venmo-qr'), 'https://venmo.com/u/TiffTaylor', {
     width: 160,
     color: { dark: '#3D95CE', light: '#FFFFFF' },
     errorCorrectionLevel: 'H'
@@ -1655,13 +1149,71 @@ window.addEventListener('load', function() {
 });
 
 /* ── SCROLL ANIMATIONS ── */
-const scrollObserver = new IntersectionObserver(entries => {
-  entries.forEach(e => {
-    if (e.isIntersecting) e.target.classList.add('visible');
-  });
+const obs = new IntersectionObserver(entries => {
+  entries.forEach(e => { if (e.isIntersecting) e.target.classList.add('visible'); });
 }, { threshold: 0.1 });
-
-document.querySelectorAll('.fade-in-on-scroll').forEach(el => scrollObserver.observe(el));
+document.querySelectorAll('.fade-in-on-scroll').forEach(el => obs.observe(el));
 </script>
+
+<!--
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+  GOOGLE APPS SCRIPT — copy everything below into a
+  NEW Apps Script project linked to the Sheet, then
+  deploy as a Web App (execute as Me, anyone can access).
+  Paste the resulting /exec URL into GOOGLE_SCRIPT_URL above.
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+function doPost(e) {
+  try {
+    var ss   = SpreadsheetApp.openById('10rwrCRkd0jG-gii28cMNi3VHXdY74xcW3F3g2jruEBk');
+    var sheet = ss.getSheetByName('RSVPs') || ss.insertSheet('RSVPs');
+
+    // Add header row if sheet is empty
+    if (sheet.getLastRow() === 0) {
+      sheet.appendRow(['Timestamp','Name','Email','Guests','Dietary','Favorite Memory']);
+      sheet.getRange(1,1,1,6).setFontWeight('bold')
+           .setBackground('#5B3E7E').setFontColor('#FFFFFF');
+    }
+
+    var data = JSON.parse(e.postData.contents);
+    sheet.appendRow([
+      data.timestamp || new Date().toISOString(),
+      data.name    || '',
+      data.email   || '',
+      data.guests  || '',
+      data.dietary || '',
+      data.memory  || ''
+    ]);
+
+    return ContentService
+      .createTextOutput(JSON.stringify({ result: 'success' }))
+      .setMimeType(ContentService.MimeType.JSON);
+  } catch(err) {
+    return ContentService
+      .createTextOutput(JSON.stringify({ result: 'error', error: err.toString() }))
+      .setMimeType(ContentService.MimeType.JSON);
+  }
+}
+
+function doGet(e) {
+  return ContentService
+    .createTextOutput(JSON.stringify({ status: 'Tiffany40 RSVP endpoint is live!' }))
+    .setMimeType(ContentService.MimeType.JSON);
+}
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+  DEPLOYMENT STEPS:
+  1. Go to script.google.com → New project
+  2. Delete default code, paste the script above
+  3. Click Deploy → New deployment
+  4. Type: Web app
+  5. Execute as: Me
+  6. Who has access: Anyone
+  7. Click Deploy → copy the /exec URL
+  8. Paste it into GOOGLE_SCRIPT_URL at the top of <script>
+  9. Re-save and push index.html to GitHub
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+-->
+
 </body>
 </html>

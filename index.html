@@ -917,20 +917,34 @@
       forty years of joy, laughter, and love.
     </p>
     <div class="gallery-categories">
+    <div style="margin-bottom:25px;">
+
+  <input
+    type="text"
+    id="photoName"
+    placeholder="Your Name"
+    class="mf-input"
+    style="margin-bottom:10px;">
+
+  <input
+    type="file"
+    id="photoUpload"
+    accept="image/*"
+    class="mf-input"
+    style="margin-bottom:10px;">
+
+  <button
+    class="btn-primary"
+    onclick="uploadPhoto()">
+    📸 Upload Photo
+  </button>
+
+</div>
+
+<div class="gallery-grid" id="galleryGrid">
       <button class="gallery-filter active" onclick="filterGallery('all',this)">All</button>
       <button class="gallery-filter" onclick="filterGallery('moments',this)">Moments</button>
     </div>
-       <div class="gallery-item" data-category="moments">
-        <div class="gallery-placeholder-icon">✨</div>
-        <div class="gallery-placeholder-label">Special Moments</div>
-        <div class="gallery-placeholder-sub">Add a photo</div>
-      </div>
-      <div class="gallery-item" data-category="moments">
-    <div class="gallery-upload-note">
-      📸 To add real photos, replace the placeholder elements with &lt;img&gt; tags pointing to your images,
-      or use a free image host like <strong>Imgur</strong> or <strong>Google Photos</strong> share links.
-    </div>
-  </div>
 </section>
 
 
@@ -1079,6 +1093,98 @@ function filterGallery(cat, btn) {
   });
 }
 
+async function uploadPhoto() {
+async function loadPhotos() {
+
+  try {
+
+    const response =
+      await fetch(
+        GOOGLE_SCRIPT_URL + '?photos=1'
+      );
+
+    const photos =
+      await response.json();
+
+    const gallery =
+      document.getElementById('galleryGrid');
+
+    gallery.innerHTML = '';
+
+    photos.reverse().forEach(photo => {
+
+      const item =
+        document.createElement('div');
+
+      item.className =
+        'gallery-item';
+
+      item.innerHTML = `
+        <img
+          src="${photo.url}"
+          alt=""
+          style="
+            width:100%;
+            height:100%;
+            object-fit:cover;
+          ">
+      `;
+
+      gallery.appendChild(item);
+
+    });
+
+  } catch(err) {
+    console.error(err);
+  }
+}
+  const file =
+    document.getElementById('photoUpload').files[0];
+
+  const name =
+    document.getElementById('photoName').value.trim();
+
+  if (!file) {
+    alert('Please choose a photo.');
+    return;
+  }
+
+  const reader = new FileReader();
+
+  reader.onload = async function() {
+
+    const base64 =
+      reader.result.split(',')[1];
+
+    try {
+
+      await fetch(GOOGLE_SCRIPT_URL, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json'
+        },
+        body: JSON.stringify({
+          action: 'photo',
+          name: name || 'Anonymous',
+          fileName: file.name,
+          mimeType: file.type,
+          image: base64
+        })
+      });
+
+      alert('Photo uploaded successfully!');
+
+      document.getElementById('photoUpload').value = '';
+      loadPhotos();
+
+    } catch(err) {
+      console.error(err);
+      alert('Upload failed.');
+    }
+  };
+
+  reader.readAsDataURL(file);
+}
 /* ── QR CODES ── */
 window.addEventListener('load', function() {
   QRCode.toCanvas(document.getElementById('main-qr'), 'https://tiffany-40.github.io/birthday/', {
@@ -1092,7 +1198,9 @@ window.addEventListener('load', function() {
     errorCorrectionLevel: 'H'
   });
 });
-
+window.addEventListener('load', () => {
+  loadPhotos();
+});
 /* ── SCROLL ANIMATIONS ── */
 const obs = new IntersectionObserver(entries => {
   entries.forEach(e => { if (e.isIntersecting) e.target.classList.add('visible'); });
@@ -1100,65 +1208,7 @@ const obs = new IntersectionObserver(entries => {
 document.querySelectorAll('.fade-in-on-scroll').forEach(el => obs.observe(el));
 </script>
 
-<!--
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-  GOOGLE APPS SCRIPT — copy everything below into a
-  NEW Apps Script project linked to the Sheet, then
-  deploy as a Web App (execute as Me, anyone can access).
-  Paste the resulting /exec URL into GOOGLE_SCRIPT_URL above.
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 
-function doPost(e) {
-  try {
-    var ss   = SpreadsheetApp.openById('10rwrCRkd0jG-gii28cMNi3VHXdY74xcW3F3g2jruEBk');
-    var sheet = ss.getSheetByName('RSVPs') || ss.insertSheet('RSVPs');
-
-    // Add header row if sheet is empty
-    if (sheet.getLastRow() === 0) {
-      sheet.appendRow(['Timestamp','Name','Email','Guests','Dietary','Favorite Memory']);
-      sheet.getRange(1,1,1,6).setFontWeight('bold')
-           .setBackground('#5B3E7E').setFontColor('#FFFFFF');
-    }
-
-    var data = JSON.parse(e.postData.contents);
-    sheet.appendRow([
-      data.timestamp || new Date().toISOString(),
-      data.name    || '',
-      data.email   || '',
-      data.guests  || '',
-      data.dietary || '',
-      data.memory  || ''
-    ]);
-
-    return ContentService
-      .createTextOutput(JSON.stringify({ result: 'success' }))
-      .setMimeType(ContentService.MimeType.JSON);
-  } catch(err) {
-    return ContentService
-      .createTextOutput(JSON.stringify({ result: 'error', error: err.toString() }))
-      .setMimeType(ContentService.MimeType.JSON);
-  }
-}
-
-function doGet(e) {
-  return ContentService
-    .createTextOutput(JSON.stringify({ status: 'Tiffany40 RSVP endpoint is live!' }))
-    .setMimeType(ContentService.MimeType.JSON);
-}
-
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-  DEPLOYMENT STEPS:
-  1. Go to script.google.com → New project
-  2. Delete default code, paste the script above
-  3. Click Deploy → New deployment
-  4. Type: Web app
-  5. Execute as: Me
-  6. Who has access: Anyone
-  7. Click Deploy → copy the /exec URL
-  8. Paste it into GOOGLE_SCRIPT_URL at the top of <script>
-  9. Re-save and push index.html to GitHub
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
--->
 
 </body>
 </html>

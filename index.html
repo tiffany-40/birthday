@@ -845,21 +845,13 @@
             <button type="button" class="rsvp-toggle-btn" data-value="maybe" onclick="selectRSVP(this)">? Maybe</button>
           </div>
         </div>
-        <div class="form-group full">
-  <label>Will Your Invited Spouse Attend?</label>
-  <div class="rsvp-toggle" id="spouse-response">
-    <button type="button" class="rsvp-toggle-btn" data-value="yes" onclick="selectSpouse(this)">✓ Yes</button>
-    <button type="button" class="rsvp-toggle-btn" data-value="no" onclick="selectSpouse(this)">✗ No</button>
-    <button type="button" class="rsvp-toggle-btn" data-value="unsure" onclick="selectSpouse(this)">? Unsure</button>
-  </div>
-</div>
         <div class="form-group">
           <label>Dietary Restrictions</label>
           <input type="text" id="rsvp-dietary" placeholder="Vegetarian, allergies, etc.">
         </div>
         <div class="form-group full">
           <label>Notes</label>
-          <textarea id="rsvp-notes" placeholder="Anything else you'd like us to know?"></textarea>
+          <textarea id="rsvp-notes" placeholder="Anything else you'd like for us to know? (P.S. Thank you for understanding that this celebration is intended to be an adults-only gathering. We look forward to celebrating Tiffany with you!)"></textarea>
         </div>
         <div class="form-group full">
           <label>Favorite Memory of Tiffany 💜</label>
@@ -869,13 +861,7 @@
       <div class="form-submit-row">
         <button class="btn-submit" id="rsvpBtn" onclick="submitRSVP()">RSVP Now ✨</button>
       </div>
-      <p class="rsvp-disclaimer">
-  Please RSVP by June 21st to help with food planning!
-</p>
-
-<p class="rsvp-disclaimer" style="margin-top:0.75rem;">
-  Thank you for understanding that this celebration will be an adults-only event. We look forward to celebrating Tiffany with you!
-</p>
+      <p class="rsvp-disclaimer">Please RSVP by June 21st to help with food planning!</p>
     </div>
 
     <div id="rsvpSuccess" style="display:none;" class="form-success">
@@ -1006,16 +992,7 @@ function closeMenu()  { document.getElementById('navLinks').classList.remove('op
 })();
 
 /* ── RSVP ── */
-function selectSpouse(button) {
-  document.querySelectorAll('#spouse-response .rsvp-toggle-btn')
-    .forEach(btn => btn.classList.remove('selected'));
-  button.classList.add('selected');
-}
 function submitRSVP() {
-  const firstName = document.getElementById('rsvp-firstname').value.trim();
-  ...function submitRSVP() {
-  const spouseSelected = document.querySelector('#spouse-response .rsvp-toggle-btn.selected');
-  const spouseResponse = spouseSelected ? spouseSelected.dataset.value : '';
   const firstName = document.getElementById('rsvp-firstname').value.trim();
   const lastName  = document.getElementById('rsvp-lastname').value.trim();
   const email     = document.getElementById('rsvp-email').value.trim();
@@ -1035,19 +1012,8 @@ function submitRSVP() {
   const btn = document.getElementById('rsvpBtn');
   btn.disabled = true; btn.textContent = 'Sending…';
 
-  const payload = {
-  action: 'rsvp',
-  firstName,
-  lastName,
-  name,
-  email,
-  response,
-  spouseResponse,
-  dietary,
-  notes,
-  memory,
-  timestamp: new Date().toISOString()
-};
+  const payload = { action: 'rsvp', firstName, lastName, name, email, response, dietary, notes, memory, timestamp: new Date().toISOString() };
+
   const finish = () => {
     document.getElementById('rsvpForm').style.display = 'none';
     document.getElementById('rsvpSuccess').style.display = 'block';

@@ -1116,13 +1116,10 @@ async function uploadPhoto() {
       item.innerHTML = `<img src="${dataUrl}" alt="Your photo" loading="lazy">`;
       grid.prepend(item);
 
-      status.textContent = '✓ Photo uploaded!';
+      status.textContent = '✓ Photo uploaded! Reload the page to see all photos.';
       status.className = 'upload-status success';
       document.getElementById('photoUpload').value = '';
       document.getElementById('photoName').value = '';
-
-      // Re-sync from server after a moment to pick up Drive URLs
-      setTimeout(loadPhotos, 4000);
 
     } catch (err) {
       console.error(err);

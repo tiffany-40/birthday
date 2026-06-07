@@ -1060,10 +1060,16 @@ async function loadPhotos() {
     const grid = document.getElementById('galleryGrid');
     grid.innerHTML = '';
     validPhotos.slice().reverse().forEach(photo => {
+      // Rewrite legacy drive.google.com/uc URLs to the public CDN format
+      // that works as an <img> src without requiring Google sign-in
+      let url = photo.url;
+      const legacyMatch = url.match(/[?&]id=([a-zA-Z0-9_-]+)/);
+      if (legacyMatch) url = 'https://lh3.googleusercontent.com/d/' + legacyMatch[1];
+
       const item = document.createElement('div');
       item.className = 'gallery-item';
       item.dataset.category = 'moments';
-      item.innerHTML = `<img src="${photo.url}" alt="Party photo" loading="lazy">`;
+      item.innerHTML = `<img src="${url}" alt="Party photo" loading="lazy">`;
       grid.appendChild(item);
     });
   } catch (err) {

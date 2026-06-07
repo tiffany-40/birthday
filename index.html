@@ -1048,12 +1048,13 @@ async function loadPhotos() {
     const response = await fetch(GOOGLE_SCRIPT_URL + '?photos=1');
     const photos = await response.json();
 
-    // Only rebuild the grid if we actually received valid photo URLs.
-    // If the fetch fails, returns empty, or returns garbage, leave whatever
-    // is already in the grid untouched (preserves optimistic previews).
-    if (!Array.isArray(photos) || photos.length === 0) return;
+    if (!Array.isArray(photos)) return;
 
     const validPhotos = photos.filter(p => p.url && p.url.startsWith('http'));
+
+    // Only touch the grid when we have real photos to show.
+    // Never replace grid content with an empty state — if the server
+    // returns nothing, leave the placeholder (or existing previews) alone.
     if (validPhotos.length === 0) return;
 
     const grid = document.getElementById('galleryGrid');
@@ -1066,7 +1067,7 @@ async function loadPhotos() {
       grid.appendChild(item);
     });
   } catch (err) {
-    // Silently ignore — grid keeps its current state
+    // Network or parse error — leave grid as-is
     console.error('Could not load photos:', err);
   }
 }
@@ -1186,10 +1187,10 @@ const obs = new IntersectionObserver(entries => {
 document.querySelectorAll('.fade-in-on-scroll').forEach(el => obs.observe(el));
 
 /* ── INIT ── */
-// loadPhotos() is intentionally NOT called on page load.
-// It is only called from uploadPhoto() after a confirmed upload,
-// and only if the server returns valid photo URLs.
-// This prevents an empty/failed fetch from wiping the grid.
+// Run on every page load — populates grid from Drive if photos exist.
+// loadPhotos() never clears the grid unless it gets real photo URLs back,
+// so a failed/empty fetch leaves the placeholder untouched.
+window.addEventListener('load', loadPhotos);
 </script>
 
 </body>

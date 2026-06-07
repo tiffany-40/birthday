@@ -1073,8 +1073,17 @@ async function loadPhotos() {
 }
 
 /* ── PHOTO UPLOAD ── */
-// Now that Apps Script returns CORS headers (Access-Control-Allow-Origin: *),
-// a plain fetch() with JSON body works correctly. No iframe tricks needed.
+// CORS cannot be fixed from the browser side — Google's CDN strips
+// Access-Control-Allow-Origin headers on Apps Script /exec endpoints,
+// so fetch() with a JSON body always fails with "Load failed" / CORS error.
+//
+// The only reliable approach:
+//   1. Encode the payload as application/x-www-form-urlencoded
+//   2. Send with fetch() mode:'no-cors'  (no preflight, body is delivered)
+//   3. Apps Script reads e.parameter.action, e.parameter.image, etc.
+//
+// Because no-cors gives us an opaque response we can't read the reply,
+// so we show an optimistic preview immediately and trust the send worked.
 
 async function uploadPhoto() {
   const file   = document.getElementById('photoUpload').files[0];
@@ -1084,9 +1093,8 @@ async function uploadPhoto() {
 
   if (!file) { alert('Please choose a photo first.'); return; }
 
-  // Enforce a 5 MB size limit — base64 inflates by ~33% so 5 MB file → ~6.7 MB payload
-  if (file.size > 5 * 1024 * 1024) {
-    alert('Please choose a photo under 5 MB.');
+  if (file.size > 4 * 1024 * 1024) {
+    alert('Please choose a photo under 4 MB.');
     return;
   }
 
@@ -1100,8 +1108,8 @@ async function uploadPhoto() {
     const dataUrl = reader.result;
     const base64  = dataUrl.split(',')[1];
 
-    // Show preview immediately so the user sees something right away
-    const grid = document.getElementById('galleryGrid');
+    // Show preview immediately
+    const grid  = document.getElementById('galleryGrid');
     const empty = grid.querySelector('.gallery-empty');
     if (empty) empty.remove();
     const preview = document.createElement('div');
@@ -1110,45 +1118,39 @@ async function uploadPhoto() {
     preview.innerHTML = `<img src="${dataUrl}" alt="Your photo" loading="lazy">`;
     grid.prepend(preview);
 
+    // Encode as form fields — the only format Apps Script reliably receives
+    // from a cross-origin no-cors POST
+    const params = new URLSearchParams();
+    params.append('action',   'photo');
+    params.append('name',     name || 'Anonymous');
+    params.append('fileName', file.name);
+    params.append('mimeType', file.type);
+    params.append('image',    base64);
+
     try {
-      const response = await fetch(GOOGLE_SCRIPT_URL, {
+      await fetch(GOOGLE_SCRIPT_URL, {
         method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({
-          action:   'photo',
-          name:     name || 'Anonymous',
-          fileName: file.name,
-          mimeType: file.type,
-          image:    base64
-        })
+        mode:   'no-cors',   // no preflight; response will be opaque but body IS sent
+        body:   params       // URLSearchParams → content-type: application/x-www-form-urlencoded
       });
 
-      const result = await response.json();
-
-      if (result.success) {
-        status.textContent = '✓ Photo saved! It will appear for everyone on reload.';
-        status.className = 'upload-status success';
-        // Swap the local preview for the permanent Drive URL
-        if (result.photoUrl) {
-          preview.querySelector('img').src = result.photoUrl;
-        }
-      } else {
-        throw new Error(result.error || 'Server returned failure');
-      }
+      // Response is opaque so we can't read it, but the request went through.
+      status.textContent = '✓ Uploaded! Refresh the page to see all photos.';
+      status.className = 'upload-status success';
 
     } catch (err) {
+      // Only network-level errors reach here (e.g. offline)
       console.error('Upload error:', err);
-      status.textContent = '✗ Upload failed: ' + err.message;
+      status.textContent = '✗ Network error — check your connection and try again.';
       status.className = 'upload-status error';
-      // Remove the optimistic preview since it didn't save
       if (preview.parentNode) preview.parentNode.removeChild(preview);
-      if (grid.children.length === 0) {
+      if (!grid.querySelector('.gallery-item')) {
         grid.innerHTML = '<div class="gallery-empty">Photos will appear here once uploaded 📸</div>';
       }
     }
 
     document.getElementById('photoUpload').value = '';
-    document.getElementById('photoName').value = '';
+    document.getElementById('photoName').value   = '';
     btn.disabled = false;
   };
 

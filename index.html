@@ -826,12 +826,16 @@
     <div class="rsvp-form" id="rsvpForm">
       <div class="form-grid">
         <div class="form-group">
-          <label>Your Name *</label>
-          <input type="text" id="rsvp-name" placeholder="Full name" required>
+          <label>First Name *</label>
+          <input type="text" id="rsvp-firstname" placeholder="First name" required>
         </div>
         <div class="form-group">
-          <label>Email (optional)</label>
-          <input type="email" id="rsvp-email" placeholder="your@email.com">
+          <label>Last Name *</label>
+          <input type="text" id="rsvp-lastname" placeholder="Last name" required>
+        </div>
+        <div class="form-group full">
+          <label>Email Address *</label>
+          <input type="email" id="rsvp-email" placeholder="your@email.com" required>
         </div>
         <div class="form-group full">
           <label>Will You Join Us? *</label>
@@ -841,9 +845,21 @@
             <button type="button" class="rsvp-toggle-btn" data-value="maybe" onclick="selectRSVP(this)">? Maybe</button>
           </div>
         </div>
+        <div class="form-group full">
+  <label>Will Your Invited Spouse Attend?</label>
+  <div class="rsvp-toggle" id="spouse-response">
+    <button type="button" class="rsvp-toggle-btn" data-value="yes" onclick="selectSpouse(this)">✓ Yes</button>
+    <button type="button" class="rsvp-toggle-btn" data-value="no" onclick="selectSpouse(this)">✗ No</button>
+    <button type="button" class="rsvp-toggle-btn" data-value="unsure" onclick="selectSpouse(this)">? Unsure</button>
+  </div>
+</div>
         <div class="form-group">
           <label>Dietary Restrictions</label>
           <input type="text" id="rsvp-dietary" placeholder="Vegetarian, allergies, etc.">
+        </div>
+        <div class="form-group full">
+          <label>Notes</label>
+          <textarea id="rsvp-notes" placeholder="Anything else you'd like us to know?"></textarea>
         </div>
         <div class="form-group full">
           <label>Favorite Memory of Tiffany 💜</label>
@@ -853,7 +869,13 @@
       <div class="form-submit-row">
         <button class="btn-submit" id="rsvpBtn" onclick="submitRSVP()">RSVP Now ✨</button>
       </div>
-      <p class="rsvp-disclaimer">Please RSVP by June 21st to help with food planning!</p>
+      <p class="rsvp-disclaimer">
+  Please RSVP by June 21st to help with food planning!
+</p>
+
+<p class="rsvp-disclaimer" style="margin-top:0.75rem;">
+  Thank you for understanding that this celebration will be an adults-only event. We look forward to celebrating Tiffany with you!
+</p>
     </div>
 
     <div id="rsvpSuccess" style="display:none;" class="form-success">
@@ -984,22 +1006,48 @@ function closeMenu()  { document.getElementById('navLinks').classList.remove('op
 })();
 
 /* ── RSVP ── */
+function selectSpouse(button) {
+  document.querySelectorAll('#spouse-response .rsvp-toggle-btn')
+    .forEach(btn => btn.classList.remove('selected'));
+  button.classList.add('selected');
+}
 function submitRSVP() {
-  const name     = document.getElementById('rsvp-name').value.trim();
-  const email    = document.getElementById('rsvp-email').value.trim();
-  const selected = document.querySelector('#rsvp-response .rsvp-toggle-btn.selected');
-  const response = selected ? selected.dataset.value : '';
-  const dietary  = document.getElementById('rsvp-dietary').value.trim();
-  const memory   = document.getElementById('rsvp-memory').value.trim();
+  const firstName = document.getElementById('rsvp-firstname').value.trim();
+  ...function submitRSVP() {
+  const spouseSelected = document.querySelector('#spouse-response .rsvp-toggle-btn.selected');
+  const spouseResponse = spouseSelected ? spouseSelected.dataset.value : '';
+  const firstName = document.getElementById('rsvp-firstname').value.trim();
+  const lastName  = document.getElementById('rsvp-lastname').value.trim();
+  const email     = document.getElementById('rsvp-email').value.trim();
+  const selected  = document.querySelector('#rsvp-response .rsvp-toggle-btn.selected');
+  const response  = selected ? selected.dataset.value : '';
+  const dietary   = document.getElementById('rsvp-dietary').value.trim();
+  const notes     = document.getElementById('rsvp-notes').value.trim();
+  const memory    = document.getElementById('rsvp-memory').value.trim();
+  const name      = `${firstName} ${lastName}`.trim();
 
-  if (!name) { alert('Please enter your name!'); return; }
-  if (!response) { alert('Please select Yes, No, or Maybe!'); return; }
+  if (!firstName) { alert('Please enter your first name!'); return; }
+  if (!lastName)  { alert('Please enter your last name!'); return; }
+  if (!email)     { alert('Please enter your email address!'); return; }
+  if (!/^[^@\s]+@[^@\s]+\.[^@\s]+$/.test(email)) { alert('Please enter a valid email address!'); return; }
+  if (!response)  { alert('Please select Yes, No, or Maybe!'); return; }
 
   const btn = document.getElementById('rsvpBtn');
   btn.disabled = true; btn.textContent = 'Sending…';
 
-  const payload = { action: 'rsvp', name, email, response, dietary, memory, timestamp: new Date().toISOString() };
-
+  const payload = {
+  action: 'rsvp',
+  firstName,
+  lastName,
+  name,
+  email,
+  response,
+  spouseResponse,
+  dietary,
+  notes,
+  memory,
+  timestamp: new Date().toISOString()
+};
   const finish = () => {
     document.getElementById('rsvpForm').style.display = 'none';
     document.getElementById('rsvpSuccess').style.display = 'block';

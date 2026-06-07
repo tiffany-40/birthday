@@ -499,37 +499,27 @@
 
 
   /* ── RSVP TOGGLE ── */
-  .rsvp-toggle {
-    display: flex; gap: 0.75rem; flex-wrap: wrap;
-  }
+  .rsvp-toggle { display: flex; gap: 0.75rem; flex-wrap: wrap; }
   .rsvp-toggle-btn {
-    flex: 1; min-width: 90px;
-    padding: 0.75rem 1.25rem;
-    background: rgba(255,255,255,0.07);
-    border: 1px solid rgba(255,255,255,0.18);
+    flex: 1; min-width: 90px; padding: 0.75rem 1.25rem;
+    background: rgba(255,255,255,0.07); border: 1px solid rgba(255,255,255,0.18);
     border-radius: 50px; color: rgba(255,255,255,0.6);
     font-family: 'Jost', sans-serif; font-size: 0.82rem;
     font-weight: 300; letter-spacing: 0.14em; text-transform: uppercase;
     cursor: pointer; transition: all 0.2s;
   }
-  .rsvp-toggle-btn:hover {
-    border-color: rgba(255,255,255,0.4); color: white;
-    background: rgba(255,255,255,0.1);
-  }
+  .rsvp-toggle-btn:hover { border-color: rgba(255,255,255,0.4); color: white; background: rgba(255,255,255,0.1); }
   .rsvp-toggle-btn.selected[data-value="yes"] {
-    background: linear-gradient(135deg, #5B9E6B, #7ABF8A);
-    border-color: #5B9E6B; color: white;
-    box-shadow: 0 4px 15px rgba(91,158,107,0.4);
+    background: linear-gradient(135deg, #5B9E6B, #7ABF8A); border-color: #5B9E6B;
+    color: white; box-shadow: 0 4px 15px rgba(91,158,107,0.4);
   }
   .rsvp-toggle-btn.selected[data-value="no"] {
-    background: linear-gradient(135deg, #9E5B6B, #BF7A8A);
-    border-color: #9E5B6B; color: white;
-    box-shadow: 0 4px 15px rgba(158,91,107,0.4);
+    background: linear-gradient(135deg, #9E5B6B, #BF7A8A); border-color: #9E5B6B;
+    color: white; box-shadow: 0 4px 15px rgba(158,91,107,0.4);
   }
   .rsvp-toggle-btn.selected[data-value="maybe"] {
-    background: linear-gradient(135deg, var(--gold), var(--gold-light));
-    border-color: var(--gold); color: var(--dark);
-    box-shadow: 0 4px 15px rgba(201,168,76,0.4);
+    background: linear-gradient(135deg, var(--gold), var(--gold-light)); border-color: var(--gold);
+    color: var(--dark); box-shadow: 0 4px 15px rgba(201,168,76,0.4);
   }
 
   .fade-in-on-scroll { opacity: 0; transform: translateY(30px); transition: opacity 0.6s ease, transform 0.6s ease; }
@@ -884,13 +874,7 @@
       Every great friendship holds a treasury of moments. Share yours — a funny story,
       a quiet memory, or simply what Tiffany means to you.
     </p>
-    <div class="memory-grid" id="memoryGrid">
-      <div class="memory-card">
-        <p class="memory-text">My favorite Tiffany memory is her laugh — it fills any room and makes everything feel lighter. There's nobody quite like her!</p>
-        <div class="memory-author">— The Celebration Team</div>
-        <div class="memory-date">Kickstarting the wall ✨</div>
-      </div>
-    </div>
+    <div class="memory-grid" id="memoryGrid"></div>
     <div class="memory-form fade-in-on-scroll">
       <h3>Leave Your Message</h3>
       <div class="memory-form-inner">
@@ -1030,52 +1014,73 @@ function submitRSVP() {
   }).then(finish).catch(finish);
 }
 
+/* ── MEMORY WALL ── */
+
+function createMemoryCard({ name, text, date }, id) {
+  const card = document.createElement('div');
+  card.className = 'memory-card';
+  if (id) card.id = 'mem-' + id;
+  card.innerHTML = `
+    <p class="memory-text">${esc(text)}</p>
+    <div class="memory-author">— ${esc(name)}</div>
+    <div class="memory-date">${date || ''}</div>`;
+  return card;
+}
+
+// Load memories from Google Sheets (submitted via RSVP form)
+async function loadMemories() {
+  try {
+    const res = await fetch(GOOGLE_SCRIPT_URL + '?memories=1');
+    const data = await res.json();
+    if (!Array.isArray(data) || data.length === 0) return;
+    const grid = document.getElementById('memoryGrid');
+    grid.innerHTML = ''; // clear any placeholders
+    data.forEach((m, i) => {
+      if (m.text && m.name) grid.appendChild(createMemoryCard(m, 'sheet-' + i));
+    });
+  } catch (err) {
+    console.warn('Could not load memories from sheet:', err);
+  }
+}
+
+// Post a new memory directly to Google Sheets from the memory form
+async function submitMemory() {
+  const name = document.getElementById('mem-name').value.trim();
+  const text = document.getElementById('mem-text').value.trim();
+  if (!name || !text) { alert('Please fill in both fields!'); return; }
+
+  const btn = document.querySelector('.memory-form .btn-primary');
+  btn.disabled = true; btn.textContent = 'Posting…';
+
+  const date = new Date().toLocaleDateString('en-US', { month:'long', day:'numeric', year:'numeric' });
+  const payload = { action: 'memory', name, text, date, timestamp: new Date().toISOString() };
+
+  // Optimistically add card to the wall immediately
+  const grid = document.getElementById('memoryGrid');
+  grid.appendChild(createMemoryCard({ name, text, date }, 'local-' + Date.now()));
+
+  try {
+    await fetch(GOOGLE_SCRIPT_URL, {
+      method: 'POST', mode: 'no-cors',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify(payload)
+    });
+  } catch (err) {
+    console.warn('Memory post error:', err);
+  }
+
+  document.getElementById('mem-name').value = '';
+  document.getElementById('mem-text').value = '';
+  btn.disabled = false; btn.textContent = 'Post Memory 💜';
+}
+
+// Add selectRSVP helper
 function selectRSVP(btn) {
   document.querySelectorAll('#rsvp-response .rsvp-toggle-btn').forEach(b => b.classList.remove('selected'));
   btn.classList.add('selected');
 }
 
-/* ── MEMORY WALL ── */
-const memories = JSON.parse(localStorage.getItem('tiffany40_memories') || '[]');
-
-function renderMemories() {
-  memories.forEach(m => {
-    if (!document.getElementById('mem-' + m.id))
-      document.getElementById('memoryGrid').appendChild(createMemoryCard(m));
-  });
-}
-
-function createMemoryCard({ id, name, text, date }) {
-  const card = document.createElement('div');
-  card.className = 'memory-card';
-  card.id = 'mem-' + id;
-  card.innerHTML = `
-    <p class="memory-text">${esc(text)}</p>
-    <div class="memory-author">— ${esc(name)}</div>
-    <div class="memory-date">${date}</div>`;
-  return card;
-}
-
-function addMemoryCard(name, text) {
-  const m = {
-    id: Date.now(), name, text,
-    date: new Date().toLocaleDateString('en-US', { month:'long', day:'numeric', year:'numeric' })
-  };
-  memories.push(m);
-  localStorage.setItem('tiffany40_memories', JSON.stringify(memories));
-  document.getElementById('memoryGrid').appendChild(createMemoryCard(m));
-}
-
-function submitMemory() {
-  const name = document.getElementById('mem-name').value.trim();
-  const text = document.getElementById('mem-text').value.trim();
-  if (!name || !text) { alert('Please fill in both fields!'); return; }
-  addMemoryCard(name, text);
-  document.getElementById('mem-name').value = '';
-  document.getElementById('mem-text').value = '';
-}
-
-renderMemories();
+window.addEventListener('load', loadMemories);
 
 function esc(s) {
   return s.replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');

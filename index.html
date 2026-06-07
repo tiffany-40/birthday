@@ -1073,18 +1073,6 @@ async function loadPhotos() {
 }
 
 /* ── PHOTO UPLOAD ── */
-// CORS cannot be fixed from the browser side — Google's CDN strips
-// Access-Control-Allow-Origin headers on Apps Script /exec endpoints,
-// so fetch() with a JSON body always fails with "Load failed" / CORS error.
-//
-// The only reliable approach:
-//   1. Encode the payload as application/x-www-form-urlencoded
-//   2. Send with fetch() mode:'no-cors'  (no preflight, body is delivered)
-//   3. Apps Script reads e.parameter.action, e.parameter.image, etc.
-//
-// Because no-cors gives us an opaque response we can't read the reply,
-// so we show an optimistic preview immediately and trust the send worked.
-
 async function uploadPhoto() {
   const file   = document.getElementById('photoUpload').files[0];
   const name   = document.getElementById('photoName').value.trim();
@@ -1118,8 +1106,7 @@ async function uploadPhoto() {
     preview.innerHTML = `<img src="${dataUrl}" alt="Your photo" loading="lazy">`;
     grid.prepend(preview);
 
-    // Encode as form fields — the only format Apps Script reliably receives
-    // from a cross-origin no-cors POST
+    // Build form params — Apps Script reads these from e.parameter
     const params = new URLSearchParams();
     params.append('action',   'photo');
     params.append('name',     name || 'Anonymous');
@@ -1127,21 +1114,24 @@ async function uploadPhoto() {
     params.append('mimeType', file.type);
     params.append('image',    base64);
 
+    console.log('[Upload] Sending to:', GOOGLE_SCRIPT_URL);
+    console.log('[Upload] Params keys:', ['action','name','fileName','mimeType','image (len=' + base64.length + ')']);
+
     try {
       await fetch(GOOGLE_SCRIPT_URL, {
         method: 'POST',
-        mode:   'no-cors',   // no preflight; response will be opaque but body IS sent
-        body:   params       // URLSearchParams → content-type: application/x-www-form-urlencoded
+        mode:   'no-cors',
+        body:   params
       });
 
-      // Response is opaque so we can't read it, but the request went through.
-      status.textContent = '✓ Uploaded! Refresh the page to see all photos.';
+      // no-cors → opaque response, can't read result, but request was sent
+      console.log('[Upload] fetch() completed (opaque response — check Apps Script Executions tab)');
+      status.textContent = '✓ Sent! Check Apps Script Executions tab to confirm it arrived.';
       status.className = 'upload-status success';
 
     } catch (err) {
-      // Only network-level errors reach here (e.g. offline)
-      console.error('Upload error:', err);
-      status.textContent = '✗ Network error — check your connection and try again.';
+      console.error('[Upload] fetch() threw:', err);
+      status.textContent = '✗ Network error: ' + err.message;
       status.className = 'upload-status error';
       if (preview.parentNode) preview.parentNode.removeChild(preview);
       if (!grid.querySelector('.gallery-item')) {
@@ -1155,7 +1145,7 @@ async function uploadPhoto() {
   };
 
   reader.onerror = function() {
-    status.textContent = '✗ Could not read file. Please try again.';
+    status.textContent = '✗ Could not read file.';
     status.className = 'upload-status error';
     btn.disabled = false;
   };

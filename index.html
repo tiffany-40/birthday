@@ -67,7 +67,7 @@
   .hero {
     min-height: 100vh; display: flex; flex-direction: column;
     align-items: center; justify-content: center;
-    text-align: center; padding: 6rem 1.5rem 4rem;
+    text-align: center; padding: 6rem 1.5rem 7rem;
     position: relative; overflow: hidden;
     background: linear-gradient(170deg, #1A1225 0%, #2D1845 40%, #3E2460 70%, #5B3E7E 100%);
   }
@@ -178,6 +178,7 @@
     display: flex; flex-direction: column; align-items: center; gap: 0.4rem;
     color: rgba(255,255,255,0.35); font-size: 0.65rem; letter-spacing: 0.15em;
     text-transform: uppercase; animation: bounceDown 2s ease infinite;
+    pointer-events: none;
   }
   .scroll-hint::after { content: '↓'; font-size: 1rem; }
   @keyframes bounceDown {
@@ -1065,14 +1066,22 @@ async function loadPhotos() {
 }
 
 /*
- * FIX: Photo upload previously used a plain fetch() which the browser blocks
- * with a CORS error because Apps Script doesn't send CORS headers on POST.
- * Solution: use mode:'no-cors' (fire-and-forget) and optimistically render
- * the photo locally from the FileReader data URL so the user gets immediate
- * feedback. loadPhotos() is still called after a short delay to sync any
- * server-side changes (e.g. other people's uploads).
+ * PHOTO UPLOAD — why this approach:
+ *
+ * fetch() with mode:'no-cors' looks like it works but the browser silently
+ * strips the request body for non-simple content types (application/json),
+ * so Apps Script receives an empty POST and saves nothing.
+ *
+ * The correct workaround for Apps Script is to POST as
+ * application/x-www-form-urlencoded (a "simple" request that browsers allow
+ * cross-origin without a preflight). We send the base64 image + metadata as
+ * a URL-encoded field, target a hidden <iframe> so the page doesn't navigate,
+ * and use the iframe's onload event as our "done" signal.
+ *
+ * The optimistic preview is added immediately from the local FileReader result
+ * so the user sees their photo right away without waiting for Drive.
  */
-async function uploadPhoto() {
+function uploadPhoto() {
   const file   = document.getElementById('photoUpload').files[0];
   const name   = document.getElementById('photoName').value.trim();
   const status = document.getElementById('uploadStatus');
@@ -1085,56 +1094,70 @@ async function uploadPhoto() {
   btn.disabled = true;
 
   const reader = new FileReader();
-  reader.onload = async function() {
+
+  reader.onload = function() {
     const dataUrl = reader.result;
     const base64  = dataUrl.split(',')[1];
 
-    try {
-      // no-cors: browser won't throw on cross-origin, but we can't read response
-      await fetch(GOOGLE_SCRIPT_URL, {
-        method: 'POST',
-        mode: 'no-cors',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({
-          action:   'photo',
-          name:     name || 'Anonymous',
-          fileName: file.name,
-          mimeType: file.type,
-          image:    base64
-        })
-      });
+    // Show the photo immediately in the grid (optimistic UI)
+    const grid = document.getElementById('galleryGrid');
+    const empty = grid.querySelector('.gallery-empty');
+    if (empty) empty.remove();
+    const preview = document.createElement('div');
+    preview.className = 'gallery-item';
+    preview.dataset.category = 'moments';
+    preview.innerHTML = `<img src="${dataUrl}" alt="Your photo" loading="lazy">`;
+    grid.prepend(preview);
 
-      // Optimistically show the photo in the grid right away
-      const grid = document.getElementById('galleryGrid');
-      // Remove the "no photos yet" placeholder if present
-      const empty = grid.querySelector('.gallery-empty');
-      if (empty) empty.remove();
+    // Build a hidden iframe to catch the form response (avoids page navigation)
+    const iframeName = 'upload_frame_' + Date.now();
+    const iframe = document.createElement('iframe');
+    iframe.name = iframeName;
+    iframe.style.display = 'none';
+    document.body.appendChild(iframe);
 
-      const item = document.createElement('div');
-      item.className = 'gallery-item';
-      item.dataset.category = 'moments';
-      item.innerHTML = `<img src="${dataUrl}" alt="Your photo" loading="lazy">`;
-      grid.prepend(item);
+    // Build a hidden form and submit it — form POST is a "simple" request,
+    // so browsers send it cross-origin without a CORS preflight, and Apps
+    // Script receives a fully-populated e.postData.contents.
+    const form = document.createElement('form');
+    form.method = 'POST';
+    form.action = GOOGLE_SCRIPT_URL;
+    form.target = iframeName;
+    form.style.display = 'none';
 
-      status.textContent = '✓ Photo uploaded!';
+    const payload = JSON.stringify({
+      action:   'photo',
+      name:     name || 'Anonymous',
+      fileName: file.name,
+      mimeType: file.type,
+      image:    base64
+    });
+
+    // Apps Script reads e.postData.contents regardless of content-type,
+    // so we send the JSON string as the value of a single field called 'data'.
+    const input = document.createElement('input');
+    input.type  = 'hidden';
+    input.name  = 'data';
+    input.value = payload;
+    form.appendChild(input);
+    document.body.appendChild(form);
+
+    iframe.onload = function() {
+      status.textContent = '✓ Photo uploaded! Others will see it on their next page load.';
       status.className = 'upload-status success';
       document.getElementById('photoUpload').value = '';
       document.getElementById('photoName').value = '';
+      btn.disabled = false;
+      // Clean up
+      document.body.removeChild(form);
+      document.body.removeChild(iframe);
+    };
 
-      // Re-sync from server after a moment to pick up Drive URLs
-      setTimeout(loadPhotos, 4000);
-
-    } catch (err) {
-      console.error(err);
-      status.textContent = '✗ Upload failed. Please try again.';
-      status.className = 'upload-status error';
-    }
-
-    btn.disabled = false;
+    form.submit();
   };
 
   reader.onerror = function() {
-    status.textContent = '✗ Could not read file.';
+    status.textContent = '✗ Could not read file. Please try again.';
     status.className = 'upload-status error';
     btn.disabled = false;
   };

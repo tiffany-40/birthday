@@ -497,6 +497,41 @@
     .gift-cards { grid-template-columns: 1fr; }
   }
 
+
+  /* ── RSVP TOGGLE ── */
+  .rsvp-toggle {
+    display: flex; gap: 0.75rem; flex-wrap: wrap;
+  }
+  .rsvp-toggle-btn {
+    flex: 1; min-width: 90px;
+    padding: 0.75rem 1.25rem;
+    background: rgba(255,255,255,0.07);
+    border: 1px solid rgba(255,255,255,0.18);
+    border-radius: 50px; color: rgba(255,255,255,0.6);
+    font-family: 'Jost', sans-serif; font-size: 0.82rem;
+    font-weight: 300; letter-spacing: 0.14em; text-transform: uppercase;
+    cursor: pointer; transition: all 0.2s;
+  }
+  .rsvp-toggle-btn:hover {
+    border-color: rgba(255,255,255,0.4); color: white;
+    background: rgba(255,255,255,0.1);
+  }
+  .rsvp-toggle-btn.selected[data-value="yes"] {
+    background: linear-gradient(135deg, #5B9E6B, #7ABF8A);
+    border-color: #5B9E6B; color: white;
+    box-shadow: 0 4px 15px rgba(91,158,107,0.4);
+  }
+  .rsvp-toggle-btn.selected[data-value="no"] {
+    background: linear-gradient(135deg, #9E5B6B, #BF7A8A);
+    border-color: #9E5B6B; color: white;
+    box-shadow: 0 4px 15px rgba(158,91,107,0.4);
+  }
+  .rsvp-toggle-btn.selected[data-value="maybe"] {
+    background: linear-gradient(135deg, var(--gold), var(--gold-light));
+    border-color: var(--gold); color: var(--dark);
+    box-shadow: 0 4px 15px rgba(201,168,76,0.4);
+  }
+
   .fade-in-on-scroll { opacity: 0; transform: translateY(30px); transition: opacity 0.6s ease, transform 0.6s ease; }
   .fade-in-on-scroll.visible { opacity: 1; transform: translateY(0); }
 </style>
@@ -808,12 +843,13 @@
           <label>Email (optional)</label>
           <input type="email" id="rsvp-email" placeholder="your@email.com">
         </div>
-        <div class="form-group">
+        <div class="form-group full">
           <label>Will You Join Us? *</label>
-          <select id="rsvp-guests">
-            <option value="1">Yes</option>
-            <option value="2">No</option>
-                      </select>
+          <div class="rsvp-toggle" id="rsvp-response">
+            <button type="button" class="rsvp-toggle-btn" data-value="yes" onclick="selectRSVP(this)">✓ Yes</button>
+            <button type="button" class="rsvp-toggle-btn" data-value="no" onclick="selectRSVP(this)">✗ No</button>
+            <button type="button" class="rsvp-toggle-btn" data-value="maybe" onclick="selectRSVP(this)">? Maybe</button>
+          </div>
         </div>
         <div class="form-group">
           <label>Dietary Restrictions</label>
@@ -965,18 +1001,20 @@ function closeMenu()  { document.getElementById('navLinks').classList.remove('op
 
 /* ── RSVP ── */
 function submitRSVP() {
-  const name    = document.getElementById('rsvp-name').value.trim();
-  const email   = document.getElementById('rsvp-email').value.trim();
-  const guests  = document.getElementById('rsvp-guests').value;
-  const dietary = document.getElementById('rsvp-dietary').value.trim();
-  const memory  = document.getElementById('rsvp-memory').value.trim();
+  const name     = document.getElementById('rsvp-name').value.trim();
+  const email    = document.getElementById('rsvp-email').value.trim();
+  const selected = document.querySelector('#rsvp-response .rsvp-toggle-btn.selected');
+  const response = selected ? selected.dataset.value : '';
+  const dietary  = document.getElementById('rsvp-dietary').value.trim();
+  const memory   = document.getElementById('rsvp-memory').value.trim();
 
   if (!name) { alert('Please enter your name!'); return; }
+  if (!response) { alert('Please select Yes, No, or Maybe!'); return; }
 
   const btn = document.getElementById('rsvpBtn');
   btn.disabled = true; btn.textContent = 'Sending…';
 
-  const payload = { action: 'rsvp', name, email, guests, dietary, memory, timestamp: new Date().toISOString() };
+  const payload = { action: 'rsvp', name, email, response, dietary, memory, timestamp: new Date().toISOString() };
 
   const finish = () => {
     document.getElementById('rsvpForm').style.display = 'none';
@@ -990,6 +1028,11 @@ function submitRSVP() {
     headers: { 'Content-Type': 'application/json' },
     body: JSON.stringify(payload)
   }).then(finish).catch(finish);
+}
+
+function selectRSVP(btn) {
+  document.querySelectorAll('#rsvp-response .rsvp-toggle-btn').forEach(b => b.classList.remove('selected'));
+  btn.classList.add('selected');
 }
 
 /* ── MEMORY WALL ── */

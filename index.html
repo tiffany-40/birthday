@@ -1072,23 +1072,11 @@ async function loadPhotos() {
   }
 }
 
-/*
- * PHOTO UPLOAD — why this approach:
- *
- * fetch() with mode:'no-cors' looks like it works but the browser silently
- * strips the request body for non-simple content types (application/json),
- * so Apps Script receives an empty POST and saves nothing.
- *
- * The correct workaround for Apps Script is to POST as
- * application/x-www-form-urlencoded (a "simple" request that browsers allow
- * cross-origin without a preflight). We send the base64 image + metadata as
- * a URL-encoded field, target a hidden <iframe> so the page doesn't navigate,
- * and use the iframe's onload event as our "done" signal.
- *
- * The optimistic preview is added immediately from the local FileReader result
- * so the user sees their photo right away without waiting for Drive.
- */
-function uploadPhoto() {
+/* ── PHOTO UPLOAD ── */
+// Now that Apps Script returns CORS headers (Access-Control-Allow-Origin: *),
+// a plain fetch() with JSON body works correctly. No iframe tricks needed.
+
+async function uploadPhoto() {
   const file   = document.getElementById('photoUpload').files[0];
   const name   = document.getElementById('photoName').value.trim();
   const status = document.getElementById('uploadStatus');
@@ -1096,17 +1084,23 @@ function uploadPhoto() {
 
   if (!file) { alert('Please choose a photo first.'); return; }
 
+  // Enforce a 5 MB size limit — base64 inflates by ~33% so 5 MB file → ~6.7 MB payload
+  if (file.size > 5 * 1024 * 1024) {
+    alert('Please choose a photo under 5 MB.');
+    return;
+  }
+
   status.textContent = 'Uploading…';
   status.className = 'upload-status';
   btn.disabled = true;
 
   const reader = new FileReader();
 
-  reader.onload = function() {
+  reader.onload = async function() {
     const dataUrl = reader.result;
     const base64  = dataUrl.split(',')[1];
 
-    // Show the photo immediately in the grid (optimistic UI)
+    // Show preview immediately so the user sees something right away
     const grid = document.getElementById('galleryGrid');
     const empty = grid.querySelector('.gallery-empty');
     if (empty) empty.remove();
@@ -1116,51 +1110,46 @@ function uploadPhoto() {
     preview.innerHTML = `<img src="${dataUrl}" alt="Your photo" loading="lazy">`;
     grid.prepend(preview);
 
-    // Build a hidden iframe to catch the form response (avoids page navigation)
-    const iframeName = 'upload_frame_' + Date.now();
-    const iframe = document.createElement('iframe');
-    iframe.name = iframeName;
-    iframe.style.display = 'none';
-    document.body.appendChild(iframe);
+    try {
+      const response = await fetch(GOOGLE_SCRIPT_URL, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          action:   'photo',
+          name:     name || 'Anonymous',
+          fileName: file.name,
+          mimeType: file.type,
+          image:    base64
+        })
+      });
 
-    // Build a hidden form and submit it — form POST is a "simple" request,
-    // so browsers send it cross-origin without a CORS preflight, and Apps
-    // Script receives a fully-populated e.postData.contents.
-    const form = document.createElement('form');
-    form.method = 'POST';
-    form.action = GOOGLE_SCRIPT_URL;
-    form.target = iframeName;
-    form.style.display = 'none';
+      const result = await response.json();
 
-    const payload = JSON.stringify({
-      action:   'photo',
-      name:     name || 'Anonymous',
-      fileName: file.name,
-      mimeType: file.type,
-      image:    base64
-    });
+      if (result.success) {
+        status.textContent = '✓ Photo saved! It will appear for everyone on reload.';
+        status.className = 'upload-status success';
+        // Swap the local preview for the permanent Drive URL
+        if (result.photoUrl) {
+          preview.querySelector('img').src = result.photoUrl;
+        }
+      } else {
+        throw new Error(result.error || 'Server returned failure');
+      }
 
-    // Apps Script reads e.postData.contents regardless of content-type,
-    // so we send the JSON string as the value of a single field called 'data'.
-    const input = document.createElement('input');
-    input.type  = 'hidden';
-    input.name  = 'data';
-    input.value = payload;
-    form.appendChild(input);
-    document.body.appendChild(form);
+    } catch (err) {
+      console.error('Upload error:', err);
+      status.textContent = '✗ Upload failed: ' + err.message;
+      status.className = 'upload-status error';
+      // Remove the optimistic preview since it didn't save
+      if (preview.parentNode) preview.parentNode.removeChild(preview);
+      if (grid.children.length === 0) {
+        grid.innerHTML = '<div class="gallery-empty">Photos will appear here once uploaded 📸</div>';
+      }
+    }
 
-    iframe.onload = function() {
-      status.textContent = '✓ Photo uploaded! Others will see it on their next page load.';
-      status.className = 'upload-status success';
-      document.getElementById('photoUpload').value = '';
-      document.getElementById('photoName').value = '';
-      btn.disabled = false;
-      // Clean up
-      document.body.removeChild(form);
-      document.body.removeChild(iframe);
-    };
-
-    form.submit();
+    document.getElementById('photoUpload').value = '';
+    document.getElementById('photoName').value = '';
+    btn.disabled = false;
   };
 
   reader.onerror = function() {
@@ -1171,6 +1160,7 @@ function uploadPhoto() {
 
   reader.readAsDataURL(file);
 }
+
 
 function filterGallery(cat, btn) {
   document.querySelectorAll('.gallery-filter').forEach(b => b.classList.remove('active'));
